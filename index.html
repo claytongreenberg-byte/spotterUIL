@@ -662,154 +662,6 @@
             font-style: italic;
             font-size: 13px;
         }
-        @media print {
-            body {
-                background: #fff !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            .editor-panel,
-            .print-section,
-            .controls-bar,
-            .no-print {
-                display: none !important;
-            }
-            .chart-container {
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                margin: 0 !important;
-            }
-            .chart-page {
-                padding: 0.4in 0.5in !important;
-                gap: 24px !important;
-                page-break-after: always;
-            }
-            .chart-page:last-child {
-                page-break-after: auto;
-            }
-            .roster-section {
-                padding: 0 0.5in 0.3in 0.5in !important;
-                margin-top: 12px !important;
-            }
-            .team-info {
-                padding: 10px 14px !important;
-                font-size: 10px !important;
-            }
-            .team-info .team-name {
-                font-size: 15px !important;
-            }
-            .formation-header {
-                font-size: 12px !important;
-                padding: 6px 0 !important;
-            }
-            .player-slot {
-                min-height: 54px !important;
-                padding: 3px !important;
-                max-width: 100px !important;
-            }
-            .player-slot .jersey {
-                font-size: 18px !important;
-                min-width: 22px !important;
-            }
-            .player-slot .pname {
-                font-size: 8px !important;
-            }
-            .player-slot .pinfo {
-                font-size: 7px !important;
-            }
-            .player-slot.backup-slot {
-                min-height: 40px !important;
-                max-width: 70px !important;
-            }
-            .player-slot.backup-slot .jersey {
-                font-size: 14px !important;
-                min-width: 18px !important;
-            }
-            .player-slot.backup-slot .pname {
-                font-size: 7px !important;
-            }
-            .player-slot.backup-slot .pinfo {
-                font-size: 6px !important;
-            }
-            .pos-row .pos-label {
-                font-size: 7px !important;
-                width: 16px !important;
-            }
-            .roster-table {
-                font-size: 8px !important;
-            }
-            .roster-table th,
-            .roster-table td {
-                padding: 3px 6px !important;
-            }
-            .roster-section .roster-title {
-                font-size: 12px !important;
-                padding-top: 8px !important;
-            }
-            .offense-row-1,
-            .offense-row-2,
-            .offense-row-3,
-            .defense-row-1,
-            .defense-row-2,
-            .defense-row-3 {
-                gap: 3px !important;
-            }
-            .offense-row-3 {
-                grid-template-columns: 1fr 1fr 1fr 1fr 1fr !important;
-            }
-            .defense-row-1 {
-                grid-template-columns: 1fr 1fr 1fr 1fr !important;
-            }
-            .defense-row-2 {
-                grid-template-columns: 1fr 1fr 1fr !important;
-                max-width: 320px !important;
-            }
-            .defense-row-3 {
-                grid-template-columns: 1fr 1fr !important;
-                max-width: 220px !important;
-            }
-        }
-        @page {
-            size: 11in 14in;
-            margin: 0.4in;
-        }
-        @media (max-width: 700px) {
-            .offense-row-3 {
-                grid-template-columns: 1fr 1fr 1fr !important;
-            }
-            .defense-row-1 {
-                grid-template-columns: 1fr 1fr !important;
-            }
-            .defense-row-2 {
-                grid-template-columns: 1fr 1fr !important;
-                max-width: 100% !important;
-            }
-            .defense-row-3 {
-                grid-template-columns: 1fr !important;
-                max-width: 100% !important;
-            }
-            .player-slot {
-                max-width: 80px !important;
-                min-height: 56px !important;
-            }
-            .player-slot .jersey {
-                font-size: 16px !important;
-                min-width: 20px !important;
-            }
-            .player-slot .pname {
-                font-size: 8px !important;
-            }
-            .player-slot .pinfo {
-                font-size: 7px !important;
-            }
-            .chart-page {
-                padding: 16px !important;
-                gap: 16px !important;
-            }
-            .roster-section {
-                padding: 0 16px 20px 16px !important;
-            }
-        }
 
         /* ─── TOAST NOTIFICATIONS ─── */
         .toast-container {
@@ -843,11 +695,89 @@
         @keyframes fadeOut {
             to { opacity: 0; transform: translateY(-10px); }
         }
+
+        /* ─── PRINT FIX ─── */
+        @media print {
+            .no-print { display: none !important; }
+            body { 
+                background: white !important; 
+                margin: 0 !important; 
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            .chart-container {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .chart-page {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 20px !important;
+                padding: 0.4in 0.3in !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                margin: 0 !important;
+            }
+            .chart-page:last-child {
+                page-break-after: auto !important;
+            }
+            .team-info, .formation-header, .player-slot .jersey, .player-slot.backup-slot .jersey {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            .toast-container { display: none !important; }
+            .player-slot { 
+                min-height: 50px !important;
+                padding: 2px !important;
+            }
+            .player-slot .jersey { font-size: 16px !important; min-width: 20px !important; }
+            .player-slot .pname { font-size: 8px !important; }
+            .player-slot .pinfo { font-size: 7px !important; }
+            .player-slot.backup-slot { min-height: 35px !important; }
+            .player-slot.backup-slot .jersey { font-size: 12px !important; min-width: 16px !important; }
+            .pos-row .pos-label { font-size: 7px !important; width: 14px !important; }
+            .roster-table { font-size: 8px !important; }
+            .roster-table th, .roster-table td { padding: 2px 4px !important; }
+            .team-info { padding: 8px 10px !important; font-size: 10px !important; }
+            .team-info .team-name { font-size: 14px !important; }
+            .formation-header { font-size: 11px !important; padding: 4px 0 !important; }
+            .offense-row-1, .offense-row-2, .offense-row-3, 
+            .defense-row-1, .defense-row-2, .defense-row-3 {
+                gap: 3px !important;
+            }
+            .roster-section {
+                margin-top: 10px !important;
+                padding: 0 0.3in 0.2in 0.3in !important;
+            }
+            .roster-section .roster-title {
+                font-size: 11px !important;
+                padding-top: 6px !important;
+            }
+        }
+
+        /* ─── FORCE LANDSCAPE & LEGAL ─── */
+        @page {
+            size: 11in 14in landscape;
+            margin: 0.2in;
+        }
     </style>
 </head>
 <body>
     <div class="toast-container" id="toastContainer"></div>
     <div class="container">
+        <!-- PRINT BUTTON (top) -->
+        <div class="no-print" style="text-align:center; margin:0 0 16px 0;">
+            <button onclick="window.print()" style="padding:16px 50px; background:#1a2a3a; color:#fff; border:none; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.15);">
+                🖨️ PRINT CHART (Landscape, Legal)
+            </button>
+            <div style="font-size:12px; color:#888; margin-top:4px;">Prints on Legal (8.5" × 14") paper in Landscape</div>
+        </div>
+
         <div class="editor-panel no-print">
             <div class="panel-title">
                 🏈 UIL/Tackle Football Chart Generator
@@ -979,12 +909,10 @@
                 <button class="primary" onclick="loadData()">📂 Load All Data</button>
             </div>
         </div>
-        <div class="print-section no-print">
-            <button class="print-btn" onclick="window.print()">🖨️ PRINT CHART (Legal Size)</button>
-            <div class="print-hint">Set printer to Legal (8.5" × 14") or larger for best results</div>
-        </div>
+
         <div class="chart-container" id="chartContainer"></div>
     </div>
+
     <script>
         const OFFENSE_SLOTS = ['QB', 'HB', 'FB', 'WR1', 'WR2', 'TE', 'LT', 'LG', 'C', 'RG', 'RT'];
         const DEFENSE_SLOTS = ['DE1', 'DE2', 'DT1', 'DT2', 'LB1', 'LB2', 'LB3', 'CB1', 'CB2', 'S1', 'S2'];
@@ -1059,9 +987,6 @@
 
         function genId() { return ++idCounter; }
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // TOAST NOTIFICATIONS
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             if (!container) return;
@@ -1188,7 +1113,7 @@
             status.className = 'import-status';
             input.value = '';
             renderAll();
-            saveData();
+            saveDataSilent();
             showToast(`✅ Imported ${parsed.length} players!`, 'success');
         }
 
@@ -1203,7 +1128,7 @@
                 DEFENSE_SLOTS.forEach(s => { if (team.backups.defense && team.backups.defense[s]) { team.backups.defense[s] = team.backups.defense[s].filter(pid => pid !== id); } });
             }
             renderAll();
-            saveData();
+            saveDataSilent();
             showToast(`🗑 Player removed`, 'info');
         }
 
@@ -1443,7 +1368,7 @@
             OFFENSE_SLOTS.forEach(s => team.backups.offense[s] = []);
             DEFENSE_SLOTS.forEach(s => team.backups.defense[s] = []);
             renderAll();
-            saveData();
+            saveDataSilent();
             const status = document.getElementById(teamKey + 'actionStatus');
             if (status) { status.textContent = '✅ Team cleared.'; }
             showToast(`🗑 ${team.name || teamKey} cleared!`, 'info');
@@ -1481,7 +1406,7 @@
                 OFFENSE_SLOTS.forEach(s => { if (!team.backups.offense[s]) team.backups.offense[s] = []; });
                 DEFENSE_SLOTS.forEach(s => { if (!team.backups.defense[s]) team.backups.defense[s] = []; });
                 renderAll();
-                saveData();
+                saveDataSilent();
                 const status = document.getElementById(teamKey + 'actionStatus');
                 if (status) { status.textContent = '✅ Team loaded.'; }
                 showToast(`✅ ${team.name || teamKey} loaded!`, 'success');
@@ -1506,7 +1431,6 @@
                             document.getElementById(prefix + 'Dot').style.background = el.value;
                         }
                         renderAll();
-                        // Auto-save without toast
                         saveDataSilent();
                     });
                     if (f === 'Color') {
@@ -1523,25 +1447,19 @@
             });
         }
 
-        // Silent save – no toast notification
         function saveDataSilent() {
             try {
                 localStorage.setItem('fbChartData11', JSON.stringify(state));
                 saveTeamSilent('teamA');
                 saveTeamSilent('teamB');
-            } catch (e) { 
-                // Silent fail – no toast
-            }
+            } catch (e) { }
         }
 
-        // Silent team save – no toast notification
         function saveTeamSilent(teamKey) {
             try {
                 const team = state[teamKey];
                 localStorage.setItem(teamKey + '_saved_11', JSON.stringify(team));
-            } catch (e) {
-                // Silent fail
-            }
+            } catch (e) { }
         }
 
         function saveData() {
