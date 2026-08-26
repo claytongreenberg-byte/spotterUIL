@@ -5,806 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UIL/Tackle Football Chart Generator</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            background: #eef1f5;
-            padding: 20px;
-            color: #1a1a1a;
-        }
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-        .editor-panel {
-            background: #fff;
-            padding: 24px;
-            margin-bottom: 24px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-        }
-        .panel-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 3px solid #1a2a3a;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .panel-title .badge {
-            background: #1F4E78;
-            color: #fff;
-            font-size: 12px;
-            padding: 2px 14px;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-        }
-        .teams-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-        @media (max-width: 900px) {
-            .teams-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        .team-card {
-            background: #f8f9fc;
-            border-radius: 8px;
-            padding: 18px 20px;
-            border-top: 4px solid #1a2a3a;
-        }
-        .team-card.team-a {
-            border-top-color: #1F4E78;
-        }
-        .team-card.team-b {
-            border-top-color: #2d8659;
-        }
-        .team-card h3 {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .team-card h3 .color-dot {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid #ddd;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-        .form-row {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 10px;
-        }
-        .form-row label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 3px;
-        }
-        .form-row input,
-        .form-row textarea {
-            padding: 7px 10px;
-            border: 1px solid #d0d7df;
-            border-radius: 5px;
-            font-size: 13px;
-            font-family: inherit;
-            background: #fff;
-            transition: 0.1s;
-        }
-        .form-row input:focus,
-        .form-row textarea:focus {
-            border-color: #1a2a3a;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 42, 58, 0.1);
-        }
-        .form-row textarea {
-            resize: vertical;
-            min-height: 44px;
-            font-size: 12px;
-        }
-        .color-picker-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .color-picker-wrap input[type="color"] {
-            width: 44px;
-            height: 36px;
-            padding: 2px;
-            border: 1px solid #d0d7df;
-            border-radius: 5px;
-            cursor: pointer;
-            background: #fff;
-        }
-        .color-picker-wrap .color-label {
-            font-size: 13px;
-            font-weight: 600;
-            padding: 4px 14px;
-            border-radius: 20px;
-            color: #fff;
-            flex: 1;
-            text-align: center;
-        }
-        .import-section {
-            background: #f8f9fc;
-            border-radius: 8px;
-            padding: 16px 18px;
-            margin-top: 6px;
-        }
-        .import-section h4 {
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .import-section .hint {
-            font-size: 11px;
-            color: #888;
-            margin-bottom: 8px;
-        }
-        .import-section textarea {
-            width: 100%;
-            min-height: 70px;
-            padding: 8px 10px;
-            border: 1px solid #d0d7df;
-            border-radius: 5px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            background: #fff;
-            resize: vertical;
-        }
-        .import-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-        .import-actions button {
-            padding: 6px 16px;
-            border: none;
-            border-radius: 5px;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.1s;
-        }
-        .import-actions .parse-btn {
-            background: #1a2a3a;
-            color: #fff;
-        }
-        .import-actions .parse-btn:hover {
-            background: #0d1b2a;
-        }
-        .import-actions .clear-btn {
-            background: #e8ecf1;
-            color: #555;
-        }
-        .import-actions .clear-btn:hover {
-            background: #d5dbe3;
-        }
-        .import-status {
-            font-size: 12px;
-            color: #27ae60;
-            margin-top: 4px;
-            min-height: 20px;
-        }
-        .import-status.error {
-            color: #c0392b;
-        }
-        .bench-area {
-            margin-top: 10px;
-            padding: 8px 10px;
-            background: #fff;
-            border-radius: 5px;
-            border: 1px dashed #d0d7df;
-            min-height: 40px;
-        }
-        .bench-area .bench-label {
-            font-size: 11px;
-            font-weight: 600;
-            color: #888;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .bench-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        .player-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 2px 8px 2px 4px;
-            background: #fff;
-            border: 1px solid #d0d7df;
-            border-radius: 16px;
-            font-size: 11px;
-            font-weight: 500;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-        }
-        .player-tag .num {
-            display: inline-block;
-            font-weight: 700;
-            padding: 0 6px;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 10px;
-            min-width: 22px;
-            text-align: center;
-        }
-        .player-tag .del {
-            cursor: pointer;
-            color: #aaa;
-            font-weight: 700;
-            font-size: 13px;
-            line-height: 1;
-            margin-left: 2px;
-        }
-        .player-tag .del:hover {
-            color: #c0392b;
-        }
-        .bench-empty {
-            font-size: 12px;
-            color: #bbb;
-            padding: 4px 0;
-        }
-        .team-actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-        .team-actions button {
-            padding: 4px 12px;
-            border: none;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 11px;
-            cursor: pointer;
-            transition: 0.1s;
-            background: #e8ecf1;
-            color: #333;
-        }
-        .team-actions button:hover {
-            background: #d5dbe3;
-        }
-        .team-actions button.danger {
-            background: #c0392b;
-            color: #fff;
-        }
-        .team-actions button.danger:hover {
-            background: #a93226;
-        }
-        .team-actions button.success {
-            background: #27ae60;
-            color: #fff;
-        }
-        .team-actions button.success:hover {
-            background: #1e8449;
-        }
-        .team-actions button.primary {
-            background: #1a2a3a;
-            color: #fff;
-        }
-        .team-actions button.primary:hover {
-            background: #0d1b2a;
-        }
-        .team-action-status {
-            font-size: 11px;
-            color: #555;
-            margin-top: 4px;
-            min-height: 16px;
-        }
-        .controls-bar {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 16px 0 8px 0;
-            padding-top: 16px;
-            border-top: 1px solid #e8ecf1;
-        }
-        .controls-bar button {
-            padding: 8px 18px;
-            border: none;
-            border-radius: 5px;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.1s;
-            background: #e8ecf1;
-            color: #333;
-        }
-        .controls-bar button:hover {
-            background: #d5dbe3;
-        }
-        .controls-bar button.primary {
-            background: #1a2a3a;
-            color: #fff;
-        }
-        .controls-bar button.primary:hover {
-            background: #0d1b2a;
-        }
-        .controls-bar button.danger {
-            background: #c0392b;
-            color: #fff;
-        }
-        .controls-bar button.danger:hover {
-            background: #a93226;
-        }
-        .controls-bar button.success {
-            background: #27ae60;
-            color: #fff;
-        }
-        .controls-bar button.success:hover {
-            background: #1e8449;
-        }
-        .print-section {
-            text-align: center;
-            margin: 20px 0 16px 0;
-        }
-        .print-btn {
-            padding: 14px 48px;
-            background: #1a2a3a;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.15s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-        }
-        .print-btn:hover {
-            background: #0d1b2a;
-            transform: translateY(-1px);
-        }
-        .print-hint {
-            font-size: 12px;
-            color: #888;
-            margin-top: 6px;
-        }
-        .chart-container {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
-            overflow: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #eef1f5; padding: 20px; color: #1a1a1a; }
+        .container { max-width: 1600px; margin: 0 auto; }
+        .editor-panel { background: #fff; padding: 24px; margin-bottom: 24px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .panel-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #1a2a3a; display: flex; align-items: center; gap: 12px; }
+        .panel-title .badge { background: #1F4E78; color: #fff; font-size: 12px; padding: 2px 14px; border-radius: 20px; letter-spacing: 0.5px; }
+        .teams-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+        @media (max-width: 900px) { .teams-grid { grid-template-columns: 1fr; } }
+        .team-card { background: #f8f9fc; border-radius: 8px; padding: 18px 20px; border-top: 4px solid #1a2a3a; }
+        .team-card.team-a { border-top-color: #1F4E78; }
+        .team-card.team-b { border-top-color: #2d8659; }
+        .team-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+        .team-card h3 .color-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ddd; display: inline-block; flex-shrink: 0; }
+        .form-row { display: flex; flex-direction: column; margin-bottom: 10px; }
+        .form-row label { font-size: 12px; font-weight: 600; color: #555; margin-bottom: 3px; }
+        .form-row input, .form-row textarea { padding: 7px 10px; border: 1px solid #d0d7df; border-radius: 5px; font-size: 13px; font-family: inherit; background: #fff; transition: 0.1s; }
+        .form-row input:focus, .form-row textarea:focus { border-color: #1a2a3a; outline: none; box-shadow: 0 0 0 3px rgba(26,42,58,0.1); }
+        .form-row textarea { resize: vertical; min-height: 44px; font-size: 12px; }
+        .color-picker-wrap { display: flex; align-items: center; gap: 10px; }
+        .color-picker-wrap input[type="color"] { width: 44px; height: 36px; padding: 2px; border: 1px solid #d0d7df; border-radius: 5px; cursor: pointer; background: #fff; }
+        .color-picker-wrap .color-label { font-size: 13px; font-weight: 600; padding: 4px 14px; border-radius: 20px; color: #fff; flex: 1; text-align: center; }
+        .import-section { background: #f8f9fc; border-radius: 8px; padding: 16px 18px; margin-top: 6px; }
+        .import-section h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+        .import-section .hint { font-size: 11px; color: #888; margin-bottom: 8px; }
+        .import-section textarea { width: 100%; min-height: 70px; padding: 8px 10px; border: 1px solid #d0d7df; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 12px; background: #fff; resize: vertical; }
+        .import-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+        .import-actions .parse-btn { background: #1a2a3a; color: #fff; }
+        .import-actions .parse-btn:hover { background: #0d1b2a; }
+        .import-actions .clear-btn { background: #e8ecf1; color: #555; }
+        .import-actions .clear-btn:hover { background: #d5dbe3; }
+        .import-status { font-size: 12px; color: #27ae60; margin-top: 4px; min-height: 20px; }
+        .import-status.error { color: #c0392b; }
+        .bench-area { margin-top: 10px; padding: 8px 10px; background: #fff; border-radius: 5px; border: 1px dashed #d0d7df; min-height: 40px; }
+        .bench-area .bench-label { font-size: 11px; font-weight: 600; color: #888; display: block; margin-bottom: 4px; }
+        .bench-list { display: flex; flex-wrap: wrap; gap: 4px; }
+        .player-tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px 2px 4px; background: #fff; border: 1px solid #d0d7df; border-radius: 16px; font-size: 11px; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+        .player-tag .num { display: inline-block; font-weight: 700; padding: 0 6px; border-radius: 12px; color: #fff; font-size: 10px; min-width: 22px; text-align: center; }
+        .player-tag .del { cursor: pointer; color: #aaa; font-weight: 700; font-size: 13px; line-height: 1; margin-left: 2px; }
+        .player-tag .del:hover { color: #c0392b; }
+        .bench-empty { font-size: 12px; color: #bbb; padding: 4px 0; }
+        .team-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+        .team-actions button { padding: 4px 12px; border: none; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; transition: 0.1s; background: #e8ecf1; color: #333; }
+        .team-actions button:hover { background: #d5dbe3; }
+        .team-actions button.danger { background: #c0392b; color: #fff; }
+        .team-actions button.danger:hover { background: #a93226; }
+        .team-actions button.success { background: #27ae60; color: #fff; }
+        .team-actions button.success:hover { background: #1e8449; }
+        .team-actions button.primary { background: #1a2a3a; color: #fff; }
+        .team-actions button.primary:hover { background: #0d1b2a; }
+        .team-action-status { font-size: 11px; color: #555; margin-top: 4px; min-height: 16px; }
+        .controls-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 8px 0; padding-top: 16px; border-top: 1px solid #e8ecf1; }
+        .controls-bar button { padding: 8px 18px; border: none; border-radius: 5px; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.1s; background: #e8ecf1; color: #333; }
+        .controls-bar button:hover { background: #d5dbe3; }
+        .controls-bar button.primary { background: #1a2a3a; color: #fff; }
+        .controls-bar button.primary:hover { background: #0d1b2a; }
+        .controls-bar button.danger { background: #c0392b; color: #fff; }
+        .controls-bar button.danger:hover { background: #a93226; }
+        .controls-bar button.success { background: #27ae60; color: #fff; }
+        .controls-bar button.success:hover { background: #1e8449; }
+        .print-section { text-align: center; margin: 20px 0 16px 0; }
+        .print-btn { padding: 14px 48px; background: #1a2a3a; color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.15s; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+        .print-btn:hover { background: #0d1b2a; transform: translateY(-1px); }
+        .print-hint { font-size: 12px; color: #888; margin-top: 6px; }
+        .chart-container { background: #fff; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); overflow: hidden; }
+        .chart-page { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 20px; page-break-after: always; page-break-inside: avoid; }
+        .chart-page:last-child { page-break-after: auto; }
+        @media (max-width: 1000px) { .chart-page { grid-template-columns: 1fr; gap: 24px; padding: 20px; } }
+        @media (max-width: 600px) { .chart-page { padding: 12px; gap: 16px; } }
+        .team-section { display: flex; flex-direction: column; min-width: 0; }
+        .team-info { padding: 8px 12px; border-radius: 6px; color: #fff; margin-bottom: 8px; font-size: 10px; line-height: 1.4; flex-shrink: 0; }
+        .team-info .team-name { font-size: 14px; font-weight: 800; letter-spacing: 0.3px; margin-bottom: 2px; }
+        .team-info .info-row { display: flex; flex-wrap: wrap; gap: 3px; }
+        .team-info .info-label { font-weight: 600; opacity: 0.9; }
+        .team-info .info-value { font-weight: 400; }
+        .team-info .info-block { margin-top: 2px; }
+        .team-info .info-block strong { opacity: 0.9; }
+        .formation-header { font-size: 11px; font-weight: 700; text-align: center; padding: 4px 0; border-radius: 4px; color: #fff; margin-bottom: 6px; letter-spacing: 0.5px; flex-shrink: 0; }
+        .formation-grid { display: flex; flex-direction: column; gap: 4px; align-items: center; width: 100%; }
+        .pos-row { display: flex; gap: 4px; justify-content: center; align-items: stretch; width: 100%; flex-wrap: wrap; }
+        .pos-row .slot-wrap { display: flex; gap: 4px; flex: 1; justify-content: center; flex-wrap: wrap; min-width: 0; }
+        .player-slot { width: 75px; min-height: 50px; border: 2px solid #e0e4ea; border-radius: 4px; padding: 2px 3px; text-align: center; background: #fafbfc; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1 1 60px; max-width: 90px; min-width: 50px; }
+        .player-slot.filled { border-color: #c8ced6; background: #fff; }
+        .player-slot .jersey { font-size: 16px; font-weight: 800; color: #fff; padding: 0 3px; border-radius: 3px; line-height: 1.2; min-width: 20px; text-align: center; width: 100%; }
+        .player-slot .pname { font-size: 7px; font-weight: 600; line-height: 1.1; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; padding: 0 1px; }
+        .player-slot .pinfo { font-size: 6px; color: #888; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; padding: 0 1px; }
+        .player-slot .pbackup { font-size: 5px; font-weight: 600; color: #aaa; letter-spacing: 0.3px; }
+        .player-slot.empty-slot { color: #ccc; font-size: 8px; font-weight: 300; }
+        .player-slot.backup-slot { border-style: dashed; border-color: #d5dbe3; background: #f8f9fc; min-height: 32px; max-width: 60px; flex: 1 1 42px; min-width: 35px; }
+        .player-slot.backup-slot .jersey { font-size: 11px; min-width: 14px; }
+        .player-slot.backup-slot .pname { font-size: 6px; }
+        .player-slot.backup-slot .pinfo { font-size: 5px; }
+        .pos-label { font-size: 6px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; background: #f5f7fa; border-radius: 3px; padding: 0 3px; display: flex; align-items: center; justify-content: center; min-width: 14px; flex-shrink: 0; }
 
-        /* ─── CHART PAGES ─── */
-        .chart-page {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            padding: 16px 20px;
-            page-break-after: always;
-            page-break-inside: avoid;
-        }
-        .chart-page:last-child {
-            page-break-after: auto;
-        }
-        @media (max-width: 1000px) {
-            .chart-page {
-                grid-template-columns: 1fr;
-                gap: 24px;
-                padding: 20px;
-            }
-        }
-        @media (max-width: 600px) {
-            .chart-page {
-                padding: 12px;
-                gap: 16px;
-            }
-        }
-        .team-section {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
+        /* ─── EAST-WEST OFFENSE ROWS ─── */
+        .offense-row-1 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 520px; flex-wrap: wrap; }
+        .offense-row-2 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 300px; flex-wrap: wrap; }
+        .offense-row-3 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 120px; flex-wrap: wrap; }
+        .offense-row-4 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 200px; flex-wrap: wrap; }
 
-        /* ─── TEAM INFO ─── */
-        .team-info {
-            padding: 8px 12px;
-            border-radius: 6px;
-            color: #fff;
-            margin-bottom: 8px;
-            font-size: 10px;
-            line-height: 1.4;
-            flex-shrink: 0;
-        }
-        .team-info .team-name {
-            font-size: 14px;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-            margin-bottom: 2px;
-        }
-        .team-info .info-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 3px;
-        }
-        .team-info .info-label {
-            font-weight: 600;
-            opacity: 0.9;
-        }
-        .team-info .info-value {
-            font-weight: 400;
-        }
-        .team-info .info-block {
-            margin-top: 2px;
-        }
-        .team-info .info-block strong {
-            opacity: 0.9;
-        }
+        /* ─── EAST-WEST DEFENSE ROWS ─── */
+        .defense-row-1 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 420px; flex-wrap: wrap; }
+        .defense-row-2 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 320px; flex-wrap: wrap; }
+        .defense-row-3 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 200px; flex-wrap: wrap; }
+        .defense-row-4 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 200px; flex-wrap: wrap; }
 
-        /* ─── FORMATION HEADER ─── */
-        .formation-header {
-            font-size: 11px;
-            font-weight: 700;
-            text-align: center;
-            padding: 4px 0;
-            border-radius: 4px;
-            color: #fff;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-            flex-shrink: 0;
-        }
-
-        /* ─── FORMATION GRID ─── */
-        .formation-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            align-items: center;
-            width: 100%;
-        }
-
-        /* ─── POSITION ROW ─── */
-        .pos-row {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            align-items: stretch;
-            width: 100%;
-            flex-wrap: wrap;
-        }
-        .pos-row .slot-wrap {
-            display: flex;
-            gap: 3px;
-            flex: 1;
-            justify-content: center;
-            flex-wrap: wrap;
-            min-width: 0;
-        }
-
-        /* ─── PLAYER SLOT ─── */
-        .player-slot {
-            width: 70px;
-            min-height: 48px;
-            border: 2px solid #e0e4ea;
-            border-radius: 4px;
-            padding: 2px 3px;
-            text-align: center;
-            background: #fafbfc;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex: 1 1 55px;
-            max-width: 85px;
-            min-width: 45px;
-        }
-        .player-slot.filled {
-            border-color: #c8ced6;
-            background: #fff;
-        }
-        .player-slot .jersey {
-            font-size: 16px;
-            font-weight: 800;
-            color: #fff;
-            padding: 0 3px;
-            border-radius: 3px;
-            line-height: 1.2;
-            min-width: 20px;
-            text-align: center;
-            width: 100%;
-        }
-        .player-slot .pname {
-            font-size: 7px;
-            font-weight: 600;
-            line-height: 1.1;
-            margin-top: 1px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-            padding: 0 1px;
-        }
-        .player-slot .pinfo {
-            font-size: 6px;
-            color: #888;
-            line-height: 1.1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-            padding: 0 1px;
-        }
-        .player-slot .pbackup {
-            font-size: 5px;
-            font-weight: 600;
-            color: #aaa;
-            letter-spacing: 0.3px;
-        }
-        .player-slot.empty-slot {
-            color: #ccc;
-            font-size: 8px;
-            font-weight: 300;
-        }
-        .player-slot.backup-slot {
-            border-style: dashed;
-            border-color: #d5dbe3;
-            background: #f8f9fc;
-            min-height: 30px;
-            max-width: 55px;
-            flex: 1 1 40px;
-            min-width: 35px;
-        }
-        .player-slot.backup-slot .jersey {
-            font-size: 11px;
-            min-width: 14px;
-        }
-        .player-slot.backup-slot .pname {
-            font-size: 6px;
-        }
-        .player-slot.backup-slot .pinfo {
-            font-size: 5px;
-        }
-
-        /* ─── OFFSET POSITION LABEL ─── */
-        .pos-label {
-            font-size: 6px;
-            font-weight: 700;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background: #f5f7fa;
-            border-radius: 3px;
-            padding: 0 3px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 14px;
-            writing-mode: vertical-lr;
-            flex-shrink: 0;
-        }
-
-        /* ─── OFFENSE ROWS (TOP-DOWN VIEW) ─── */
-        /* Row 1: OL at TOP */
-        .offense-row-1 {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            width: 100%;
-            max-width: 420px;
-            flex-wrap: wrap;
-        }
-        /* Row 2: WR1, WR2 on ends + QB under center */
-        .offense-row-2 {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            width: 100%;
-            max-width: 420px;
-            flex-wrap: wrap;
-        }
-        .offense-row-2 .pos-row {
-            max-width: 140px;
-        }
-        /* Row 3: TE */
-        .offense-row-3 {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            width: 100%;
-            max-width: 160px;
-            flex-wrap: wrap;
-        }
-        /* Row 4: RB, FB at BOTTOM */
-        .offense-row-4 {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            width: 100%;
-            max-width: 220px;
-            flex-wrap: wrap;
-        }
-
-        /* ─── DEFENSE ROWS (4-3) ─── */
-        /* Row 1: DL at TOP */
-        .defense-row-1 {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            width: 100%;
-            max-width: 380px;
-            flex-wrap: wrap;
-        }
-        /* Row 2: LBs */
-        .defense-row-2 {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            width: 100%;
-            max-width: 280px;
-            flex-wrap: wrap;
-        }
-        /* Row 3: CBs */
-        .defense-row-3 {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            width: 100%;
-            max-width: 180px;
-            flex-wrap: wrap;
-        }
-        /* Row 4: Safeties at BOTTOM */
-        .defense-row-4 {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            width: 100%;
-            max-width: 180px;
-            flex-wrap: wrap;
-        }
-
-        /* ─── ROSTER TABLE ─── */
-        .roster-section {
-            margin-top: 12px;
-            padding: 0 16px 16px 16px;
-            page-break-inside: avoid;
-        }
-        .roster-section .roster-title {
-            font-size: 11px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 6px;
-            padding-top: 8px;
-            border-top: 2px solid #e8ecf1;
-            color: #1a2a3a;
-        }
-        .roster-table-wrap {
-            overflow-x: auto;
-        }
-        .roster-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 8px;
-        }
-        .roster-table thead {
-            background: #1a2a3a;
-            color: #fff;
-        }
-        .roster-table th {
-            padding: 3px 6px;
-            text-align: left;
-            font-weight: 700;
-            border: 1px solid #2d4055;
-        }
-        .roster-table td {
-            padding: 2px 6px;
-            border: 1px solid #dde2e8;
-        }
-        .roster-table tbody tr:nth-child(even) {
-            background: #f8f9fc;
-        }
-        .roster-table .team-divider td {
-            background: #e8ecf1;
-            font-weight: 700;
-            font-size: 9px;
-            padding: 3px 6px;
-            border-color: #d0d7df;
-        }
-        .roster-empty {
-            text-align: center;
-            color: #bbb;
-            padding: 16px 0;
-            font-style: italic;
-            font-size: 11px;
-        }
-
-        /* ─── TOAST ─── */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
-        .toast {
-            padding: 10px 18px;
-            border-radius: 8px;
-            color: #fff;
-            font-weight: 600;
-            font-size: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.5s forwards;
-            min-width: 200px;
-            pointer-events: auto;
-        }
+        .roster-section { margin-top: 12px; padding: 0 16px 16px 16px; page-break-inside: avoid; }
+        .roster-section .roster-title { font-size: 11px; font-weight: 700; text-align: center; margin-bottom: 6px; padding-top: 8px; border-top: 2px solid #e8ecf1; color: #1a2a3a; }
+        .roster-table-wrap { overflow-x: auto; }
+        .roster-table { width: 100%; border-collapse: collapse; font-size: 8px; }
+        .roster-table thead { background: #1a2a3a; color: #fff; }
+        .roster-table th { padding: 3px 6px; text-align: left; font-weight: 700; border: 1px solid #2d4055; }
+        .roster-table td { padding: 2px 6px; border: 1px solid #dde2e8; }
+        .roster-table tbody tr:nth-child(even) { background: #f8f9fc; }
+        .roster-table .team-divider td { background: #e8ecf1; font-weight: 700; font-size: 9px; padding: 3px 6px; border-color: #d0d7df; }
+        .roster-empty { text-align: center; color: #bbb; padding: 16px 0; font-style: italic; font-size: 11px; }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { padding: 10px 18px; border-radius: 8px; color: #fff; font-weight: 600; font-size: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.5s forwards; min-width: 200px; pointer-events: auto; }
         .toast.success { background: #27ae60; }
         .toast.error { background: #c0392b; }
         .toast.info { background: #2d4055; }
-        @keyframes slideIn {
-            from { transform: translateX(100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes fadeOut {
-            to { opacity: 0; transform: translateY(-10px); }
-        }
+        @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
 
-        /* ─── PRINT ─── */
+        /* ─── SPECIAL TEAMS ─── */
+        .special-teams-section { margin-top: 8px; padding: 8px 12px; background: #f5f7fa; border-radius: 4px; border: 1px solid #e0e4ea; }
+        .special-teams-section h4 { font-size: 10px; font-weight: 700; color: #1a2a3a; margin-bottom: 4px; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; }
+        .special-teams-grid { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+        .special-slot { display: flex; flex-direction: column; align-items: center; padding: 2px 6px; background: #fff; border-radius: 3px; border: 1px solid #d0d7df; min-width: 50px; }
+        .special-slot .label { font-size: 6px; font-weight: 700; color: #888; text-transform: uppercase; }
+        .special-slot .jersey { font-size: 12px; font-weight: 800; color: #fff; padding: 0 4px; border-radius: 3px; line-height: 1.2; min-width: 16px; text-align: center; }
+        .special-slot .pname { font-size: 6px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50px; }
+
         @media print {
             .no-print { display: none !important; }
-            body { 
-                background: white !important; 
-                margin: 0 !important; 
-                padding: 0 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            .chart-container {
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            .chart-page {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 12px !important;
-                padding: 0.15in 0.15in !important;
-                page-break-after: always !important;
-                page-break-inside: avoid !important;
-                margin: 0 !important;
-            }
-            .chart-page:last-child {
-                page-break-after: auto !important;
-            }
-            .team-info, .formation-header, .player-slot .jersey, .player-slot.backup-slot .jersey {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
+            body { background: white !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+            .chart-container { box-shadow: none !important; border-radius: 0 !important; margin: 0 !important; padding: 0 !important; }
+            .chart-page { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px !important; padding: 0.12in 0.12in !important; page-break-after: always !important; page-break-inside: avoid !important; margin: 0 !important; }
+            .chart-page:last-child { page-break-after: auto !important; }
+            .team-info, .formation-header, .player-slot .jersey, .player-slot.backup-slot .jersey, .special-slot .jersey { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
             .toast-container { display: none !important; }
-            .player-slot { 
-                min-height: 32px !important;
-                padding: 1px 2px !important;
-                flex: 1 1 38px !important;
-                max-width: 55px !important;
-                min-width: 30px !important;
-            }
+            .player-slot { min-height: 32px !important; padding: 1px 2px !important; flex: 1 1 40px !important; max-width: 60px !important; min-width: 32px !important; }
             .player-slot .jersey { font-size: 12px !important; min-width: 14px !important; }
             .player-slot .pname { font-size: 6px !important; }
             .player-slot .pinfo { font-size: 5px !important; }
-            .player-slot.backup-slot { min-height: 22px !important; flex: 1 1 28px !important; max-width: 40px !important; min-width: 22px !important; }
+            .player-slot.backup-slot { min-height: 24px !important; flex: 1 1 30px !important; max-width: 42px !important; min-width: 24px !important; }
             .player-slot.backup-slot .jersey { font-size: 9px !important; min-width: 10px !important; }
             .pos-label { font-size: 5px !important; min-width: 10px !important; }
             .roster-table { font-size: 6px !important; }
@@ -816,34 +161,27 @@
             .defense-row-1, .defense-row-2, .defense-row-3, .defense-row-4 {
                 gap: 2px !important;
             }
-            .roster-section {
-                margin-top: 4px !important;
-                padding: 0 0.1in 0.08in 0.1in !important;
-            }
-            .roster-section .roster-title {
-                font-size: 8px !important;
-                padding-top: 3px !important;
-            }
-            .offense-row-1 { max-width: 320px !important; }
-            .offense-row-2 { max-width: 320px !important; }
-            .offense-row-3 { max-width: 120px !important; }
-            .offense-row-4 { max-width: 160px !important; }
-            .defense-row-1 { max-width: 280px !important; }
-            .defense-row-2 { max-width: 200px !important; }
-            .defense-row-3 { max-width: 140px !important; }
-            .defense-row-4 { max-width: 140px !important; }
+            .roster-section { margin-top: 4px !important; padding: 0 0.08in 0.06in 0.08in !important; }
+            .roster-section .roster-title { font-size: 8px !important; padding-top: 3px !important; }
+            .offense-row-1 { max-width: 400px !important; }
+            .offense-row-2 { max-width: 220px !important; }
+            .offense-row-3 { max-width: 90px !important; }
+            .offense-row-4 { max-width: 150px !important; }
+            .defense-row-1 { max-width: 320px !important; }
+            .defense-row-2 { max-width: 240px !important; }
+            .defense-row-3 { max-width: 150px !important; }
+            .defense-row-4 { max-width: 150px !important; }
+            .special-slot { min-width: 35px !important; padding: 1px 4px !important; }
+            .special-slot .jersey { font-size: 9px !important; min-width: 12px !important; }
+            .special-slot .pname { font-size: 5px !important; }
+            .special-slot .label { font-size: 5px !important; }
         }
-
-        @page {
-            size: 11in 14in landscape;
-            margin: 0.08in;
-        }
+        @page { size: 11in 14in landscape; margin: 0.06in; }
     </style>
 </head>
 <body>
     <div class="toast-container" id="toastContainer"></div>
     <div class="container">
-        <!-- PRINT BUTTON -->
         <div class="no-print" style="text-align:center; margin:0 0 16px 0;">
             <button onclick="window.print()" style="padding:16px 50px; background:#1a2a3a; color:#fff; border:none; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.15);">
                 🖨️ PRINT CHART (Landscape, Legal)
@@ -852,62 +190,24 @@
         </div>
 
         <div class="editor-panel no-print">
-            <div class="panel-title">
-                🏈 UIL/Tackle Football Chart Generator
-                <span class="badge">11v11</span>
-            </div>
+            <div class="panel-title">🏈 UIL/Tackle Football Chart Generator <span class="badge">11v11</span></div>
             <div class="teams-grid">
-                <!-- Away -->
                 <div class="team-card team-a" id="teamACard">
                     <h3><span class="color-dot" id="teamADot" style="background:#1F4E78;"></span> Away</h3>
-                    <div class="form-row">
-                        <label>Team Name</label>
-                        <input type="text" id="teamAName" placeholder="e.g. Trinity Trojans" value="">
-                    </div>
-                    <div class="form-row">
-                        <label>Color</label>
-                        <div class="color-picker-wrap">
-                            <input type="color" id="teamAColor" value="#1F4E78">
-                            <span class="color-label" id="teamAColorLabel" style="background:#1F4E78;">Away</span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <label>Head Coach</label>
-                        <input type="text" id="teamACoach" placeholder="Head Coach" value="">
-                    </div>
-                    <div class="form-row">
-                        <label>Record</label>
-                        <input type="text" id="teamARecord" placeholder="e.g. 5-2 (3-1 District)" value="">
-                    </div>
-                    <div class="form-row">
-                        <label>UIL Division</label>
-                        <input type="text" id="teamADivision" placeholder="e.g. 6A D1" value="">
-                    </div>
-                    <div class="form-row">
-                        <label>Season Schedule</label>
-                        <textarea id="teamASchedule" placeholder="Upcoming games..."></textarea>
-                    </div>
-                    <div class="form-row">
-                        <label>Past Scores</label>
-                        <textarea id="teamAScores" placeholder="Recent results..."></textarea>
-                    </div>
-                    <div class="form-row">
-                        <label>Matchups / Series History</label>
-                        <textarea id="teamAMatchups" placeholder="Head-to-head info..."></textarea>
-                    </div>
+                    <div class="form-row"><label>Team Name</label><input type="text" id="teamAName" placeholder="e.g. Trinity Trojans" value=""></div>
+                    <div class="form-row"><label>Color</label><div class="color-picker-wrap"><input type="color" id="teamAColor" value="#1F4E78"><span class="color-label" id="teamAColorLabel" style="background:#1F4E78;">Away</span></div></div>
+                    <div class="form-row"><label>Head Coach</label><input type="text" id="teamACoach" placeholder="Head Coach" value=""></div>
+                    <div class="form-row"><label>Record</label><input type="text" id="teamARecord" placeholder="e.g. 5-2 (3-1 District)" value=""></div>
+                    <div class="form-row"><label>UIL Division</label><input type="text" id="teamADivision" placeholder="e.g. 6A D1" value=""></div>
+                    <div class="form-row"><label>Season Schedule</label><textarea id="teamASchedule" placeholder="Upcoming games..."></textarea></div>
+                    <div class="form-row"><label>Past Scores</label><textarea id="teamAScores" placeholder="Recent results..."></textarea></div>
+                    <div class="form-row"><label>Matchups / Series History</label><textarea id="teamAMatchups" placeholder="Head-to-head info..."></textarea></div>
                     <div class="import-section" style="margin-top:12px;">
                         <h4>📋 Import Roster</h4>
                         <div class="hint">Format: # | Name | Pos | Ht/Wt | School | Stats</div>
                         <textarea id="teamARosterInput" placeholder="Paste roster here..."></textarea>
-                        <div class="import-actions">
-                            <button class="parse-btn" onclick="parseRoster('A')">🔍 Parse &amp; Import</button>
-                            <button class="clear-btn" onclick="document.getElementById('teamARosterInput').value=''">Clear</button>
-                            <span class="import-status" id="teamAStatus"></span>
-                        </div>
-                        <div class="bench-area" id="teamABench">
-                            <span class="bench-label">🧑‍🤝‍🧑 Unassigned Players</span>
-                            <div class="bench-list" id="teamABenchList"></div>
-                        </div>
+                        <div class="import-actions"><button class="parse-btn" onclick="parseRoster('A')">🔍 Parse &amp; Import</button><button class="clear-btn" onclick="document.getElementById('teamARosterInput').value=''">Clear</button><span class="import-status" id="teamAStatus"></span></div>
+                        <div class="bench-area" id="teamABench"><span class="bench-label">🧑‍🤝‍🧑 Unassigned Players</span><div class="bench-list" id="teamABenchList"></div></div>
                     </div>
                     <div class="team-actions">
                         <button class="danger" onclick="clearTeam('teamA')">🗑 Clear Team</button>
@@ -916,57 +216,22 @@
                         <span class="team-action-status" id="teamAactionStatus"></span>
                     </div>
                 </div>
-                <!-- Home -->
                 <div class="team-card team-b" id="teamBCard">
                     <h3><span class="color-dot" id="teamBDot" style="background:#2d8659;"></span> Home</h3>
-                    <div class="form-row">
-                        <label>Team Name</label>
-                        <input type="text" id="teamBName" placeholder="e.g. Southlake Carroll" value="">
-                    </div>
-                    <div class="form-row">
-                        <label>Color</label>
-                        <div class="color-picker-wrap">
-                            <input type="color" id="teamBColor" value="#2d8659">
-                            <span class="color-label" id="teamBColorLabel" style="background:#2d8659;">Home</span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <label>Head Coach</label>
-                        <input type="text" id="teamBCoach" placeholder="Head Coach" value="">
-                    </div>
-                    <div class="form-row">
-                        <label>Record</label>
-                        <input type="text" id="teamBRecord" placeholder="e.g. 6-1 (4-0 District)" value="">
-                    </div>
-                    <div class="form-row">
-                        <label>UIL Division</label>
-                        <input type="text" id="teamBDivision" placeholder="e.g. 6A D1" value="">
-                    </div>
-                    <div class="form-row">
-                        <label>Season Schedule</label>
-                        <textarea id="teamBSchedule" placeholder="Upcoming games..."></textarea>
-                    </div>
-                    <div class="form-row">
-                        <label>Past Scores</label>
-                        <textarea id="teamBScores" placeholder="Recent results..."></textarea>
-                    </div>
-                    <div class="form-row">
-                        <label>Matchups / Series History</label>
-                        <textarea id="teamBMatchups" placeholder="Head-to-head info..."></textarea>
-                    </div>
+                    <div class="form-row"><label>Team Name</label><input type="text" id="teamBName" placeholder="e.g. Southlake Carroll" value=""></div>
+                    <div class="form-row"><label>Color</label><div class="color-picker-wrap"><input type="color" id="teamBColor" value="#2d8659"><span class="color-label" id="teamBColorLabel" style="background:#2d8659;">Home</span></div></div>
+                    <div class="form-row"><label>Head Coach</label><input type="text" id="teamBCoach" placeholder="Head Coach" value=""></div>
+                    <div class="form-row"><label>Record</label><input type="text" id="teamBRecord" placeholder="e.g. 6-1 (4-0 District)" value=""></div>
+                    <div class="form-row"><label>UIL Division</label><input type="text" id="teamBDivision" placeholder="e.g. 6A D1" value=""></div>
+                    <div class="form-row"><label>Season Schedule</label><textarea id="teamBSchedule" placeholder="Upcoming games..."></textarea></div>
+                    <div class="form-row"><label>Past Scores</label><textarea id="teamBScores" placeholder="Recent results..."></textarea></div>
+                    <div class="form-row"><label>Matchups / Series History</label><textarea id="teamBMatchups" placeholder="Head-to-head info..."></textarea></div>
                     <div class="import-section" style="margin-top:12px;">
                         <h4>📋 Import Roster</h4>
                         <div class="hint">Format: # | Name | Pos | Ht/Wt | School | Stats</div>
                         <textarea id="teamBRosterInput" placeholder="Paste roster here..."></textarea>
-                        <div class="import-actions">
-                            <button class="parse-btn" onclick="parseRoster('B')">🔍 Parse &amp; Import</button>
-                            <button class="clear-btn" onclick="document.getElementById('teamBRosterInput').value=''">Clear</button>
-                            <span class="import-status" id="teamBStatus"></span>
-                        </div>
-                        <div class="bench-area" id="teamBBench">
-                            <span class="bench-label">🧑‍🤝‍🧑 Unassigned Players</span>
-                            <div class="bench-list" id="teamBBenchList"></div>
-                        </div>
+                        <div class="import-actions"><button class="parse-btn" onclick="parseRoster('B')">🔍 Parse &amp; Import</button><button class="clear-btn" onclick="document.getElementById('teamBRosterInput').value=''">Clear</button><span class="import-status" id="teamBStatus"></span></div>
+                        <div class="bench-area" id="teamBBench"><span class="bench-label">🧑‍🤝‍🧑 Unassigned Players</span><div class="bench-list" id="teamBBenchList"></div></div>
                     </div>
                     <div class="team-actions">
                         <button class="danger" onclick="clearTeam('teamB')">🗑 Clear Team</button>
@@ -988,80 +253,33 @@
 
     <script>
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // OFFENSE ORDER: TOP to BOTTOM (Field View)
-        // LT, LG, C, RG, RT (OL) → WR1, WR2, QB (under center) → RB, FB
+        // OFFENSE ORDER: EAST-WEST (Horizontal across field)
+        // LT, LG, C, RG, RT → WR1, WR2, QB, TE, RB, FB
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         const OFFENSE_SLOTS = ['LT', 'LG', 'C', 'RG', 'RT', 'WR1', 'WR2', 'QB', 'TE', 'RB', 'FB'];
         const DEFENSE_SLOTS = ['DE1', 'DE2', 'DT1', 'DT2', 'LB1', 'LB2', 'LB3', 'CB1', 'CB2', 'S1', 'S2'];
 
+        // Special Teams
+        const SPECIAL_SLOTS = ['K', 'P', 'LS', 'KR', 'PR'];
+
         const POS_MAP = {
-            QB: 'QB',
-            HB: 'RB',
-            RB: 'RB',
-            FB: 'FB',
-            WR: 'WR1',
-            WR1: 'WR1',
-            WR2: 'WR2',
-            TE: 'TE',
-            LT: 'LT',
-            LG: 'LG',
-            C: 'C',
-            RG: 'RG',
-            RT: 'RT',
-            DE: 'DE1',
-            DE1: 'DE1',
-            DE2: 'DE2',
-            DT: 'DT1',
-            DT1: 'DT1',
-            DT2: 'DT2',
-            LB: 'LB1',
-            LB1: 'LB1',
-            LB2: 'LB2',
-            LB3: 'LB3',
-            CB: 'CB1',
-            CB1: 'CB1',
-            CB2: 'CB2',
-            S: 'S1',
-            S1: 'S1',
-            S2: 'S2',
-            SAF: 'S1',
-            FS: 'S1',
-            SS: 'S2',
+            QB: 'QB', HB: 'RB', RB: 'RB', FB: 'FB',
+            WR: 'WR1', WR1: 'WR1', WR2: 'WR2', TE: 'TE',
+            LT: 'LT', LG: 'LG', C: 'C', RG: 'RG', RT: 'RT',
+            DE: 'DE1', DE1: 'DE1', DE2: 'DE2',
+            DT: 'DT1', DT1: 'DT1', DT2: 'DT2',
+            LB: 'LB1', LB1: 'LB1', LB2: 'LB2', LB3: 'LB3',
+            CB: 'CB1', CB1: 'CB1', CB2: 'CB2',
+            S: 'S1', S1: 'S1', S2: 'S2', SAF: 'S1', FS: 'S1', SS: 'S2',
+            K: 'K', P: 'P', LS: 'LS', KR: 'KR', PR: 'PR'
         };
 
         let state = {
-            teamA: {
-                name: '',
-                color: '#1F4E78',
-                coach: '',
-                record: '',
-                division: '',
-                schedule: '',
-                scores: '',
-                matchups: '',
-                players: [],
-                offense: {},
-                defense: {},
-                backups: { offense: {}, defense: {} }
-            },
-            teamB: {
-                name: '',
-                color: '#2d8659',
-                coach: '',
-                record: '',
-                division: '',
-                schedule: '',
-                scores: '',
-                matchups: '',
-                players: [],
-                offense: {},
-                defense: {},
-                backups: { offense: {}, defense: {} }
-            }
+            teamA: { name: '', color: '#1F4E78', coach: '', record: '', division: '', schedule: '', scores: '', matchups: '', players: [], offense: {}, defense: {}, backups: { offense: {}, defense: {} }, special: {} },
+            teamB: { name: '', color: '#2d8659', coach: '', record: '', division: '', schedule: '', scores: '', matchups: '', players: [], offense: {}, defense: {}, backups: { offense: {}, defense: {} }, special: {} }
         };
 
         let idCounter = 1000;
-
         function genId() { return ++idCounter; }
 
         function showToast(message, type = 'success') {
@@ -1071,19 +289,16 @@
             toast.className = `toast ${type}`;
             toast.textContent = message;
             container.appendChild(toast);
-            setTimeout(() => {
-                if (toast.parentNode) toast.remove();
-            }, 3000);
+            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 3000);
         }
 
         function initState() {
             ['teamA', 'teamB'].forEach(tk => {
                 const t = state[tk];
-                t.offense = {};
-                t.defense = {};
-                t.backups = { offense: {}, defense: {} };
+                t.offense = {}; t.defense = {}; t.backups = { offense: {}, defense: {} }; t.special = {};
                 OFFENSE_SLOTS.forEach(s => t.offense[s] = null);
                 DEFENSE_SLOTS.forEach(s => t.defense[s] = null);
+                SPECIAL_SLOTS.forEach(s => t.special[s] = null);
                 OFFENSE_SLOTS.forEach(s => t.backups.offense[s] = []);
                 DEFENSE_SLOTS.forEach(s => t.backups.defense[s] = []);
                 t.players = [];
@@ -1095,6 +310,7 @@
             const team = state[teamKey];
             OFFENSE_SLOTS.forEach(s => team.offense[s] = null);
             DEFENSE_SLOTS.forEach(s => team.defense[s] = null);
+            SPECIAL_SLOTS.forEach(s => team.special[s] = null);
             team.backups = { offense: {}, defense: {} };
             OFFENSE_SLOTS.forEach(s => team.backups.offense[s] = []);
             DEFENSE_SLOTS.forEach(s => team.backups.defense[s] = []);
@@ -1104,11 +320,11 @@
                 const slot = POS_MAP[pos] || null;
                 if (slot) {
                     if (OFFENSE_SLOTS.includes(slot) && !team.offense[slot]) {
-                        team.offense[slot] = p.id;
-                        assigned.add(p.id);
+                        team.offense[slot] = p.id; assigned.add(p.id);
                     } else if (DEFENSE_SLOTS.includes(slot) && !team.defense[slot]) {
-                        team.defense[slot] = p.id;
-                        assigned.add(p.id);
+                        team.defense[slot] = p.id; assigned.add(p.id);
+                    } else if (SPECIAL_SLOTS.includes(slot) && !team.special[slot]) {
+                        team.special[slot] = p.id; assigned.add(p.id);
                     }
                 }
             });
@@ -1118,11 +334,9 @@
                 const slot = POS_MAP[pos] || null;
                 if (slot) {
                     if (OFFENSE_SLOTS.includes(slot)) {
-                        team.backups.offense[slot].push(p.id);
-                        assigned.add(p.id);
+                        team.backups.offense[slot].push(p.id); assigned.add(p.id);
                     } else if (DEFENSE_SLOTS.includes(slot)) {
-                        team.backups.defense[slot].push(p.id);
-                        assigned.add(p.id);
+                        team.backups.defense[slot].push(p.id); assigned.add(p.id);
                     }
                 }
             });
@@ -1146,10 +360,7 @@
                 if (line.includes('|')) parts = line.split('|').map(s => s.trim());
                 else if (line.includes('\t')) parts = line.split('\t').map(s => s.trim());
                 else if (line.includes(',')) parts = line.split(',').map(s => s.trim());
-                else {
-                    parts = line.split(/\s{2,}/).map(s => s.trim());
-                    if (parts.length < 2) parts = line.split(/\s+/).map(s => s.trim());
-                }
+                else { parts = line.split(/\s{2,}/).map(s => s.trim()); if (parts.length < 2) parts = line.split(/\s+/).map(s => s.trim()); }
                 if (parts.length < 2) return;
                 let number = parts[0].replace(/^#/, '').replace(/\.$/, '').trim() || '?';
                 let name = parts[1] || 'Unknown';
@@ -1157,17 +368,14 @@
                 let htWt = parts[3] || '';
                 let school = parts[4] || '';
                 let stats = parts.slice(5).join(' ') || '';
-                const posKeywords = ['QB', 'HB', 'RB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'DE', 'DT', 'LB', 'CB', 'S', 'SAF', 'FS', 'SS'];
+                const posKeywords = ['QB', 'HB', 'RB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'DE', 'DT', 'LB', 'CB', 'S', 'SAF', 'FS', 'SS', 'K', 'P', 'LS', 'KR', 'PR'];
                 let found = posKeywords.some(k => position.toUpperCase().includes(k));
                 if (!found && parts.length >= 4) {
                     const test = parts[2] || '';
                     if (test.length <= 4 && test.toUpperCase() !== test) {
                         const temp = parts[3] || '';
                         if (posKeywords.some(k => temp.toUpperCase().includes(k))) {
-                            position = temp;
-                            htWt = parts[4] || '';
-                            school = parts[5] || '';
-                            stats = parts.slice(6).join(' ') || '';
+                            position = temp; htWt = parts[4] || ''; school = parts[5] || ''; stats = parts.slice(6).join(' ') || '';
                         }
                     }
                 }
@@ -1200,20 +408,15 @@
             team.players = team.players.filter(p => p.id !== id);
             OFFENSE_SLOTS.forEach(s => { if (team.offense[s] === id) team.offense[s] = null; });
             DEFENSE_SLOTS.forEach(s => { if (team.defense[s] === id) team.defense[s] = null; });
+            SPECIAL_SLOTS.forEach(s => { if (team.special[s] === id) team.special[s] = null; });
             if (team.backups) {
                 OFFENSE_SLOTS.forEach(s => { if (team.backups.offense && team.backups.offense[s]) { team.backups.offense[s] = team.backups.offense[s].filter(pid => pid !== id); } });
                 DEFENSE_SLOTS.forEach(s => { if (team.backups.defense && team.backups.defense[s]) { team.backups.defense[s] = team.backups.defense[s].filter(pid => pid !== id); } });
             }
-            renderAll();
-            saveDataSilent();
-            showToast(`🗑 Player removed`, 'info');
+            renderAll(); saveDataSilent(); showToast(`🗑 Player removed`, 'info');
         }
 
-        function renderAll() {
-            renderTeamInputs();
-            renderBenches();
-            renderChart();
-        }
+        function renderAll() { renderTeamInputs(); renderBenches(); renderChart(); }
 
         function renderTeamInputs() {
             ['A', 'B'].forEach(t => {
@@ -1229,10 +432,7 @@
                 document.getElementById(prefix + 'Matchups').value = team.matchups || '';
                 document.getElementById(prefix + 'Dot').style.background = team.color || '#1F4E78';
                 const label = document.getElementById(prefix + 'ColorLabel');
-                if (label) { 
-                    label.style.background = team.color || '#1F4E78';
-                    label.textContent = team.name || (t === 'A' ? 'Away' : 'Home');
-                }
+                if (label) { label.style.background = team.color || '#1F4E78'; label.textContent = team.name || (t === 'A' ? 'Away' : 'Home'); }
             });
         }
 
@@ -1243,10 +443,11 @@
                 const list = document.getElementById(prefix + 'BenchList');
                 if (!list) return;
                 const assignedIds = new Set();
-                const allSlots = [...OFFENSE_SLOTS, ...DEFENSE_SLOTS];
+                const allSlots = [...OFFENSE_SLOTS, ...DEFENSE_SLOTS, ...SPECIAL_SLOTS];
                 allSlots.forEach(s => {
                     if (team.offense[s]) assignedIds.add(team.offense[s]);
                     if (team.defense[s]) assignedIds.add(team.defense[s]);
+                    if (team.special[s]) assignedIds.add(team.special[s]);
                     if (team.backups && team.backups.offense && team.backups.offense[s]) {
                         team.backups.offense[s].forEach(id => assignedIds.add(id));
                     }
@@ -1313,11 +514,13 @@
                         ${teamInfoHTML(leftTeam)}
                         <div class="formation-header" style="background:${leftTeam.color || '#1F4E78'};">${leftLabel}</div>
                         ${formationHTML(leftTeam, leftSide)}
+                        ${specialTeamsHTML(leftTeam)}
                     </div>
                     <div class="team-section">
                         ${teamInfoHTML(rightTeam)}
                         <div class="formation-header" style="background:${rightTeam.color || '#2d8659'};">${rightLabel}</div>
                         ${formationHTML(rightTeam, rightSide)}
+                        ${specialTeamsHTML(rightTeam)}
                     </div>
                 </div>
             `;
@@ -1338,62 +541,83 @@
             `;
         }
 
+        function specialTeamsHTML(team) {
+            let html = `<div class="special-teams-section"><h4>Special Teams</h4><div class="special-teams-grid">`;
+            SPECIAL_SLOTS.forEach(slot => {
+                const playerId = team.special[slot] || null;
+                const player = playerId ? team.players.find(p => p.id === playerId) : null;
+                if (player) {
+                    html += `<div class="special-slot">
+                        <span class="label">${slot}</span>
+                        <span class="jersey" style="background:${team.color || '#1F4E78'};">${player.number}</span>
+                        <span class="pname">${player.name}</span>
+                    </div>`;
+                } else {
+                    html += `<div class="special-slot">
+                        <span class="label">${slot}</span>
+                        <span style="color:#ccc; font-size:8px;">—</span>
+                    </div>`;
+                }
+            });
+            html += `</div></div>`;
+            return html;
+        }
+
         function formationHTML(team, side) {
             const isOffense = side === 'offense';
             let html = '<div class="formation-grid">';
 
             if (isOffense) {
-                // Row 1: LT, LG, C, RG, RT (Offensive Line - TOP, closest to LOS)
+                // Row 1: LT, LG, C, RG, RT
                 html += `<div class="offense-row-1">`;
                 ['LT', 'LG', 'C', 'RG', 'RT'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
 
-                // Row 2: WR1, WR2 (Receivers on the ends), QB (under center in the middle)
+                // Row 2: WR1, WR2
                 html += `<div class="offense-row-2">`;
-                ['WR1', 'WR2', 'QB'].forEach(slot => {
+                ['WR1', 'WR2'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
 
-                // Row 3: TE (slightly deeper)
+                // Row 3: QB
                 html += `<div class="offense-row-3">`;
-                ['TE'].forEach(slot => {
+                ['QB'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
 
-                // Row 4: RB, FB (deepest in the backfield - BOTTOM)
+                // Row 4: TE, RB, FB
                 html += `<div class="offense-row-4">`;
-                ['RB', 'FB'].forEach(slot => {
+                ['TE', 'RB', 'FB'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
             } else {
-                // Defense - 4-3 (TOP to BOTTOM)
-                // Row 1: DE1, DT1, DT2, DE2 (Defensive Line - TOP)
+                // Row 1: DE1, DT1, DT2, DE2
                 html += `<div class="defense-row-1">`;
                 ['DE1', 'DT1', 'DT2', 'DE2'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
 
-                // Row 2: LB1, LB2, LB3 (Linebackers)
+                // Row 2: LB1, LB2, LB3
                 html += `<div class="defense-row-2">`;
                 ['LB1', 'LB2', 'LB3'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
 
-                // Row 3: CB1, CB2 (Cornerbacks)
+                // Row 3: CB1, CB2
                 html += `<div class="defense-row-3">`;
                 ['CB1', 'CB2'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
 
-                // Row 4: S1, S2 (Safeties - BOTTOM)
+                // Row 4: S1, S2
                 html += `<div class="defense-row-4">`;
                 ['S1', 'S2'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
@@ -1486,11 +710,11 @@
             team.players = [];
             OFFENSE_SLOTS.forEach(s => team.offense[s] = null);
             DEFENSE_SLOTS.forEach(s => team.defense[s] = null);
+            SPECIAL_SLOTS.forEach(s => team.special[s] = null);
             team.backups = { offense: {}, defense: {} };
             OFFENSE_SLOTS.forEach(s => team.backups.offense[s] = []);
             DEFENSE_SLOTS.forEach(s => team.backups.defense[s] = []);
-            renderAll();
-            saveDataSilent();
+            renderAll(); saveDataSilent();
             const status = document.getElementById(teamKey + 'actionStatus');
             if (status) { status.textContent = '✅ Team cleared.'; }
             showToast(`🗑 ${team.name || teamKey} cleared!`, 'info');
@@ -1503,9 +727,7 @@
                 const status = document.getElementById(teamKey + 'actionStatus');
                 if (status) { status.textContent = '✅ Team saved.'; }
                 showToast(`✅ ${team.name || teamKey} saved!`, 'success');
-            } catch (e) { 
-                showToast('❌ Save failed: ' + e.message, 'error');
-            }
+            } catch (e) { showToast('❌ Save failed: ' + e.message, 'error'); }
         }
 
         function loadTeam(teamKey) {
@@ -1525,16 +747,14 @@
                 if (!team.backups.defense) team.backups.defense = {};
                 OFFENSE_SLOTS.forEach(s => { if (!(s in team.offense)) team.offense[s] = null; });
                 DEFENSE_SLOTS.forEach(s => { if (!(s in team.defense)) team.defense[s] = null; });
+                SPECIAL_SLOTS.forEach(s => { if (!(s in team.special)) team.special[s] = null; });
                 OFFENSE_SLOTS.forEach(s => { if (!team.backups.offense[s]) team.backups.offense[s] = []; });
                 DEFENSE_SLOTS.forEach(s => { if (!team.backups.defense[s]) team.backups.defense[s] = []; });
-                renderAll();
-                saveDataSilent();
+                renderAll(); saveDataSilent();
                 const status = document.getElementById(teamKey + 'actionStatus');
                 if (status) { status.textContent = '✅ Team loaded.'; }
                 showToast(`✅ ${team.name || teamKey} loaded!`, 'success');
-            } catch (e) { 
-                showToast('❌ Load failed: ' + e.message, 'error');
-            }
+            } catch (e) { showToast('❌ Load failed: ' + e.message, 'error'); }
         }
 
         function bindUI() {
@@ -1552,8 +772,7 @@
                             if (label) { label.style.background = el.value; }
                             document.getElementById(prefix + 'Dot').style.background = el.value;
                         }
-                        renderAll();
-                        saveDataSilent();
+                        renderAll(); saveDataSilent();
                     });
                     if (f === 'Color') {
                         el.addEventListener('change', () => {
@@ -1561,8 +780,7 @@
                             const label = document.getElementById(prefix + 'ColorLabel');
                             if (label) { label.style.background = el.value; }
                             document.getElementById(prefix + 'Dot').style.background = el.value;
-                            renderAll();
-                            saveDataSilent();
+                            renderAll(); saveDataSilent();
                         });
                     }
                 });
@@ -1590,17 +808,12 @@
                 saveTeam('teamA');
                 saveTeam('teamB');
                 showToast('✅ All data saved!', 'success');
-            } catch (e) { 
-                showToast('❌ Save failed: ' + e.message, 'error');
-            }
+            } catch (e) { showToast('❌ Save failed: ' + e.message, 'error'); }
         }
 
         function loadData() {
             const saved = localStorage.getItem('fbChartData11');
-            if (!saved) { 
-                showToast('❌ No saved data found.', 'error');
-                return; 
-            }
+            if (!saved) { showToast('❌ No saved data found.', 'error'); return; }
             try {
                 const parsed = JSON.parse(saved);
                 ['teamA', 'teamB'].forEach(tk => {
@@ -1611,15 +824,13 @@
                     if (!t.backups.defense) t.backups.defense = {};
                     OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
                     DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
+                    SPECIAL_SLOTS.forEach(s => { if (!(s in t.special)) t.special[s] = null; });
                     if (!t.players) t.players = [];
                     state[tk] = t;
                 });
-                renderAll();
-                saveDataSilent();
+                renderAll(); saveDataSilent();
                 showToast('✅ All data loaded successfully!', 'success');
-            } catch (e) { 
-                showToast('❌ Failed to load data: ' + e.message, 'error');
-            }
+            } catch (e) { showToast('❌ Failed to load data: ' + e.message, 'error'); }
         }
 
         function clearAllData() {
@@ -1644,6 +855,7 @@
                         if (!t.backups.defense) t.backups.defense = {};
                         OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
                         DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
+                        SPECIAL_SLOTS.forEach(s => { if (!(s in t.special)) t.special[s] = null; });
                         if (!t.players) t.players = [];
                         state[tk] = t;
                     });
@@ -1658,12 +870,12 @@
                 if (!t.backups.defense) t.backups.defense = {};
                 OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
                 DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
+                SPECIAL_SLOTS.forEach(s => { if (!(s in t.special)) t.special[s] = null; });
                 OFFENSE_SLOTS.forEach(s => { if (!t.backups.offense[s]) t.backups.offense[s] = []; });
                 DEFENSE_SLOTS.forEach(s => { if (!t.backups.defense[s]) t.backups.defense[s] = []; });
                 if (!t.players) t.players = [];
             });
-            bindUI();
-            renderAll();
+            bindUI(); renderAll();
             ['A', 'B'].forEach(t => {
                 const prefix = t === 'A' ? 'teamA' : 'teamB';
                 const c = state[prefix].color || (t === 'A' ? '#1F4E78' : '#2d8659');
