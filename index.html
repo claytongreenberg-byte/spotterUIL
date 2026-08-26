@@ -819,9 +819,9 @@
                 <span class="badge">7v7</span>
             </div>
             <div class="teams-grid">
-                <!-- TEAM A -->
+                <!-- Away -->
                 <div class="team-card team-a" id="teamACard">
-                    <h3><span class="color-dot" id="teamADot" style="background:#1F4E78;"></span> Team A</h3>
+                    <h3><span class="color-dot" id="teamADot" style="background:#1F4E78;"></span> Away</h3>
                     <div class="form-row">
                         <label>Team Name</label>
                         <input type="text" id="teamAName" placeholder="e.g. Trinity Trojans" value="">
@@ -830,7 +830,7 @@
                         <label>Color</label>
                         <div class="color-picker-wrap">
                             <input type="color" id="teamAColor" value="#1F4E78">
-                            <span class="color-label" id="teamAColorLabel" style="background:#1F4E78;">Team A</span>
+                            <span class="color-label" id="teamAColorLabel" style="background:#1F4E78;">Away</span>
                         </div>
                     </div>
                     <div class="form-row">
@@ -878,9 +878,9 @@
                         <span class="team-action-status" id="teamAactionStatus"></span>
                     </div>
                 </div>
-                <!-- TEAM B -->
+                <!-- HOME -->
                 <div class="team-card team-b" id="teamBCard">
-                    <h3><span class="color-dot" id="teamBDot" style="background:#2d8659;"></span> Team B</h3>
+                    <h3><span class="color-dot" id="teamBDot" style="background:#2d8659;"></span> Home</h3>
                     <div class="form-row">
                         <label>Team Name</label>
                         <input type="text" id="teamBName" placeholder="e.g. Delta State" value="">
@@ -889,7 +889,7 @@
                         <label>Color</label>
                         <div class="color-picker-wrap">
                             <input type="color" id="teamBColor" value="#2d8659">
-                            <span class="color-label" id="teamBColorLabel" style="background:#2d8659;">Team B</span>
+                            <span class="color-label" id="teamBColorLabel" style="background:#2d8659;">Home</span>
                         </div>
                     </div>
                     <div class="form-row">
@@ -1174,7 +1174,7 @@
                 const label = document.getElementById(prefix + 'ColorLabel');
                 if (label) { 
                     label.style.background = team.color || '#1F4E78';
-                    label.textContent = team.name || (t === 'A' ? 'Team A' : 'Team B');
+                    label.textContent = team.name || (t === 'A' ? 'Away' : 'Home');
                 }
             });
         }
@@ -1350,8 +1350,8 @@
 
         function generateRosterHTML() {
             const allPlayers = [];
-            state.teamA.players.forEach(p => allPlayers.push({ ...p, team: state.teamA.name || 'Team A', teamColor: state.teamA.color || '#1F4E78' }));
-            state.teamB.players.forEach(p => allPlayers.push({ ...p, team: state.teamB.name || 'Team B', teamColor: state.teamB.color || '#2d8659' }));
+            state.teamA.players.forEach(p => allPlayers.push({ ...p, team: state.teamA.name || 'Away', teamColor: state.teamA.color || '#1F4E78' }));
+            state.teamB.players.forEach(p => allPlayers.push({ ...p, team: state.teamB.name || 'Home', teamColor: state.teamB.color || '#2d8659' }));
             allPlayers.sort((a, b) => {
                 const na = parseInt(a.number) || 0;
                 const nb = parseInt(b.number) || 0;
@@ -1554,7 +1554,7 @@
                 const c = state[prefix].color || (t === 'A' ? '#1F4E78' : '#2d8659');
                 document.getElementById(prefix + 'Dot').style.background = c;
                 const label = document.getElementById(prefix + 'ColorLabel');
-                if (label) { label.style.background = c; label.textContent = state[prefix].name || (t === 'A' ? 'Team A' : 'Team B'); }
+                if (label) { label.style.background = c; label.textContent = state[prefix].name || (t === 'A' ? 'Away' : 'Home'); }
             });
         }
 
