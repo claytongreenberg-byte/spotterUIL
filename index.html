@@ -82,9 +82,32 @@
         .team-info .info-block { margin-top: 2px; }
         .team-info .info-block strong { opacity: 0.9; }
         .formation-header { font-size: 11px; font-weight: 700; text-align: center; padding: 4px 0; border-radius: 4px; color: #fff; margin-bottom: 6px; letter-spacing: 0.5px; flex-shrink: 0; }
-        .formation-grid { display: flex; flex-direction: column; gap: 4px; align-items: center; width: 100%; }
-        .pos-row { display: flex; gap: 4px; justify-content: center; align-items: stretch; width: 100%; flex-wrap: wrap; }
-        .pos-row .slot-wrap { display: flex; gap: 4px; flex: 1; justify-content: center; flex-wrap: wrap; min-width: 0; }
+
+        /* ─── FORMATION GRID ─── */
+        .formation-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+            width: 100%;
+        }
+        .pos-row {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            align-items: stretch;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .pos-row .slot-wrap {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+            justify-content: center;
+            flex-wrap: wrap;
+            min-width: 0;
+        }
+
         .player-slot { width: 75px; min-height: 50px; border: 2px solid #e0e4ea; border-radius: 4px; padding: 2px 3px; text-align: center; background: #fafbfc; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1 1 60px; max-width: 90px; min-width: 50px; }
         .player-slot.filled { border-color: #c8ced6; background: #fff; }
         .player-slot .jersey { font-size: 16px; font-weight: 800; color: #fff; padding: 0 3px; border-radius: 3px; line-height: 1.2; min-width: 20px; text-align: center; width: 100%; }
@@ -98,17 +121,21 @@
         .player-slot.backup-slot .pinfo { font-size: 5px; }
         .pos-label { font-size: 6px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; background: #f5f7fa; border-radius: 3px; padding: 0 3px; display: flex; align-items: center; justify-content: center; min-width: 14px; flex-shrink: 0; }
 
-        /* ─── EAST-WEST OFFENSE ROWS ─── */
-        .offense-row-1 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 520px; flex-wrap: wrap; }
-        .offense-row-2 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 300px; flex-wrap: wrap; }
-        .offense-row-3 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 120px; flex-wrap: wrap; }
-        .offense-row-4 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 200px; flex-wrap: wrap; }
+        /* ─── CORRECT FORMATION ROWS ─── */
+        /* Row 1: WR1, LT, LG, C, RG, RT, WR2 (left to right) */
+        .offense-row-1 { display: flex; gap: 4px; justify-content: center; width: 100%; flex-wrap: wrap; }
+        /* Row 2: QB (under center) */
+        .offense-row-2 { display: flex; gap: 4px; justify-content: center; width: 100%; flex-wrap: wrap; }
+        /* Row 3: TE */
+        .offense-row-3 { display: flex; gap: 4px; justify-content: center; width: 100%; flex-wrap: wrap; }
+        /* Row 4: RB, FB */
+        .offense-row-4 { display: flex; gap: 4px; justify-content: center; width: 100%; flex-wrap: wrap; }
 
-        /* ─── EAST-WEST DEFENSE ROWS ─── */
-        .defense-row-1 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 420px; flex-wrap: wrap; }
-        .defense-row-2 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 320px; flex-wrap: wrap; }
-        .defense-row-3 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 200px; flex-wrap: wrap; }
-        .defense-row-4 { display: flex; gap: 4px; justify-content: center; width: 100%; max-width: 200px; flex-wrap: wrap; }
+        /* ─── DEFENSE ROWS ─── */
+        .defense-row-1 { display: flex; gap: 4px; justify-content: center; width: 100%; flex-wrap: wrap; }
+        .defense-row-2 { display: flex; gap: 4px; justify-content: center; width: 100%; flex-wrap: wrap; }
+        .defense-row-3 { display: flex; gap: 4px; justify-content: center; width: 100%; flex-wrap: wrap; }
+        .defense-row-4 { display: flex; gap: 4px; justify-content: center; width: 100%; flex-wrap: wrap; }
 
         .roster-section { margin-top: 12px; padding: 0 16px 16px 16px; page-break-inside: avoid; }
         .roster-section .roster-title { font-size: 11px; font-weight: 700; text-align: center; margin-bottom: 6px; padding-top: 8px; border-top: 2px solid #e8ecf1; color: #1a2a3a; }
@@ -120,6 +147,7 @@
         .roster-table tbody tr:nth-child(even) { background: #f8f9fc; }
         .roster-table .team-divider td { background: #e8ecf1; font-weight: 700; font-size: 9px; padding: 3px 6px; border-color: #d0d7df; }
         .roster-empty { text-align: center; color: #bbb; padding: 16px 0; font-style: italic; font-size: 11px; }
+
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .toast { padding: 10px 18px; border-radius: 8px; color: #fff; font-weight: 600; font-size: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.5s forwards; min-width: 200px; pointer-events: auto; }
         .toast.success { background: #27ae60; }
@@ -157,24 +185,16 @@
             .team-info { padding: 4px 6px !important; font-size: 7px !important; }
             .team-info .team-name { font-size: 10px !important; }
             .formation-header { font-size: 8px !important; padding: 2px 0 !important; }
-            .offense-row-1, .offense-row-2, .offense-row-3, .offense-row-4,
-            .defense-row-1, .defense-row-2, .defense-row-3, .defense-row-4 {
-                gap: 2px !important;
-            }
             .roster-section { margin-top: 4px !important; padding: 0 0.08in 0.06in 0.08in !important; }
             .roster-section .roster-title { font-size: 8px !important; padding-top: 3px !important; }
-            .offense-row-1 { max-width: 400px !important; }
-            .offense-row-2 { max-width: 220px !important; }
-            .offense-row-3 { max-width: 90px !important; }
-            .offense-row-4 { max-width: 150px !important; }
-            .defense-row-1 { max-width: 320px !important; }
-            .defense-row-2 { max-width: 240px !important; }
-            .defense-row-3 { max-width: 150px !important; }
-            .defense-row-4 { max-width: 150px !important; }
             .special-slot { min-width: 35px !important; padding: 1px 4px !important; }
             .special-slot .jersey { font-size: 9px !important; min-width: 12px !important; }
             .special-slot .pname { font-size: 5px !important; }
             .special-slot .label { font-size: 5px !important; }
+            .offense-row-1, .offense-row-2, .offense-row-3, .offense-row-4,
+            .defense-row-1, .defense-row-2, .defense-row-3, .defense-row-4 {
+                gap: 2px !important;
+            }
         }
         @page { size: 11in 14in landscape; margin: 0.06in; }
     </style>
@@ -253,13 +273,14 @@
 
     <script>
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // OFFENSE ORDER: EAST-WEST (Horizontal across field)
-        // LT, LG, C, RG, RT → WR1, WR2, QB, TE, RB, FB
+        // OFFENSE ORDER: Left to Right, Top to Bottom
+        // Row 1: WR1, LT, LG, C, RG, RT, WR2
+        // Row 2: QB (under center)
+        // Row 3: TE
+        // Row 4: RB, FB
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        const OFFENSE_SLOTS = ['LT', 'LG', 'C', 'RG', 'RT', 'WR1', 'WR2', 'QB', 'TE', 'RB', 'FB'];
-        const DEFENSE_SLOTS = ['DE1', 'DE2', 'DT1', 'DT2', 'LB1', 'LB2', 'LB3', 'CB1', 'CB2', 'S1', 'S2'];
-
-        // Special Teams
+        const OFFENSE_SLOTS = ['WR1', 'LT', 'LG', 'C', 'RG', 'RT', 'WR2', 'QB', 'TE', 'RB', 'FB'];
+        const DEFENSE_SLOTS = ['DE1', 'DT1', 'DT2', 'DE2', 'LB1', 'LB2', 'LB3', 'CB1', 'CB2', 'S1', 'S2'];
         const SPECIAL_SLOTS = ['K', 'P', 'LS', 'KR', 'PR'];
 
         const POS_MAP = {
@@ -568,34 +589,35 @@
             let html = '<div class="formation-grid">';
 
             if (isOffense) {
-                // Row 1: LT, LG, C, RG, RT
+                // Row 1: WR1, LT, LG, C, RG, RT, WR2 (left to right)
                 html += `<div class="offense-row-1">`;
-                ['LT', 'LG', 'C', 'RG', 'RT'].forEach(slot => {
+                ['WR1', 'LT', 'LG', 'C', 'RG', 'RT', 'WR2'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
 
-                // Row 2: WR1, WR2
+                // Row 2: QB (under center)
                 html += `<div class="offense-row-2">`;
-                ['WR1', 'WR2'].forEach(slot => {
-                    html += renderSlot(team, slot, isOffense);
-                });
-                html += `</div>`;
-
-                // Row 3: QB
-                html += `<div class="offense-row-3">`;
                 ['QB'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
 
-                // Row 4: TE, RB, FB
+                // Row 3: TE
+                html += `<div class="offense-row-3">`;
+                ['TE'].forEach(slot => {
+                    html += renderSlot(team, slot, isOffense);
+                });
+                html += `</div>`;
+
+                // Row 4: RB, FB
                 html += `<div class="offense-row-4">`;
-                ['TE', 'RB', 'FB'].forEach(slot => {
+                ['RB', 'FB'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
             } else {
+                // Defense
                 // Row 1: DE1, DT1, DT2, DE2
                 html += `<div class="defense-row-1">`;
                 ['DE1', 'DT1', 'DT2', 'DE2'].forEach(slot => {
