@@ -268,6 +268,55 @@
             padding: 4px 0;
         }
 
+        /* ─── TEAM ACTION BUTTONS ─── */
+        .team-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .team-actions button {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.1s;
+            background: #e8ecf1;
+            color: #333;
+        }
+        .team-actions button:hover {
+            background: #d5dbe3;
+        }
+        .team-actions button.danger {
+            background: #c0392b;
+            color: #fff;
+        }
+        .team-actions button.danger:hover {
+            background: #a93226;
+        }
+        .team-actions button.success {
+            background: #27ae60;
+            color: #fff;
+        }
+        .team-actions button.success:hover {
+            background: #1e8449;
+        }
+        .team-actions button.primary {
+            background: #1a2a3a;
+            color: #fff;
+        }
+        .team-actions button.primary:hover {
+            background: #0d1b2a;
+        }
+        .team-action-status {
+            font-size: 11px;
+            color: #555;
+            margin-top: 4px;
+            min-height: 16px;
+        }
+
         /* ─── CONTROLS ─── */
         .controls-bar {
             display: flex;
@@ -535,7 +584,7 @@
             font-size: 7px;
         }
 
-        /* Offense rows */
+        /* 11v11 offense rows */
         .offense-row-1 {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -564,7 +613,7 @@
             justify-content: center;
         }
 
-        /* Defense rows */
+        /* 11v11 defense rows */
         .defense-row-1 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -859,6 +908,14 @@
                             <div class="bench-list" id="teamABenchList"></div>
                         </div>
                     </div>
+
+                    <!-- Team Action Buttons -->
+                    <div class="team-actions">
+                        <button class="danger" onclick="clearTeam('teamA')">🗑 Clear Team</button>
+                        <button class="success" onclick="saveTeam('teamA')">💾 Save Team</button>
+                        <button class="primary" onclick="loadTeam('teamA')">📂 Load Team</button>
+                        <span class="team-action-status" id="teamAactionStatus"></span>
+                    </div>
                 </div>
 
                 <!-- TEAM B -->
@@ -914,14 +971,22 @@
                             <div class="bench-list" id="teamBBenchList"></div>
                         </div>
                     </div>
+
+                    <!-- Team Action Buttons -->
+                    <div class="team-actions">
+                        <button class="danger" onclick="clearTeam('teamB')">🗑 Clear Team</button>
+                        <button class="success" onclick="saveTeam('teamB')">💾 Save Team</button>
+                        <button class="primary" onclick="loadTeam('teamB')">📂 Load Team</button>
+                        <span class="team-action-status" id="teamBactionStatus"></span>
+                    </div>
                 </div>
             </div>
 
             <!-- CONTROLS -->
             <div class="controls-bar">
                 <button class="danger" onclick="clearAllData()">🗑 Clear All</button>
-                <button class="success" onclick="saveData()">💾 Save Data</button>
-                <button class="primary" onclick="loadData()">📂 Load Data</button>
+                <button class="success" onclick="saveData()">💾 Save All Data</button>
+                <button class="primary" onclick="loadData()">📂 Load All Data</button>
                 <button onclick="seedSampleData()">🌱 Load Sample Data</button>
             </div>
         </div>
@@ -939,7 +1004,7 @@
 
     <script>
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // DATA MODEL
+        // 11v11 POSITION DEFINITIONS
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         const OFFENSE_SLOTS = ['QB', 'HB', 'FB', 'WR1', 'WR2', 'TE', 'LT', 'LG', 'C', 'RG', 'RT'];
         const DEFENSE_SLOTS = ['DE1', 'DE2', 'DT1', 'DT2', 'LB1', 'LB2', 'LB3', 'CB1', 'CB2', 'S1', 'S2'];
@@ -979,6 +1044,9 @@
             SS: 'S2',
         };
 
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // DATA STATE
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         let state = {
             teamA: {
                 name: 'Texas A&M-Commerce',
@@ -1106,7 +1174,6 @@
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         function autoAssignTeam(teamKey) {
             const team = state[teamKey];
-            // Reset
             OFFENSE_SLOTS.forEach(s => team.offense[s] = null);
             DEFENSE_SLOTS.forEach(s => team.defense[s] = null);
             team.backups = { offense: {}, defense: {} };
@@ -1115,7 +1182,6 @@
 
             const assigned = new Set();
 
-            // Starters
             team.players.forEach(p => {
                 const pos = p.position ? p.position.toUpperCase().trim() : '';
                 const slot = POS_MAP[pos] || null;
@@ -1130,7 +1196,6 @@
                 }
             });
 
-            // Backups
             team.players.forEach(p => {
                 if (assigned.has(p.id)) return;
                 const pos = p.position ? p.position.toUpperCase().trim() : '';
@@ -1171,13 +1236,11 @@
             const parsed = [];
 
             lines.forEach(line => {
-                // Try pipe, tab, comma, or multiple spaces
                 let parts = [];
                 if (line.includes('|')) parts = line.split('|').map(s => s.trim());
                 else if (line.includes('\t')) parts = line.split('\t').map(s => s.trim());
                 else if (line.includes(',')) parts = line.split(',').map(s => s.trim());
                 else {
-                    // Try splitting by 2+ spaces
                     parts = line.split(/\s{2,}/).map(s => s.trim());
                     if (parts.length < 2) parts = line.split(/\s+/).map(s => s.trim());
                 }
@@ -1191,7 +1254,6 @@
                 let school = parts[4] || '';
                 let stats = parts.slice(5).join(' ') || '';
 
-                // Try to detect if position is in parts[2] or parts[3]
                 const posKeywords = ['QB', 'HB', 'RB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'DE', 'DT', 'LB', 'CB',
                     'S', 'SAF', 'FS', 'SS'
                 ];
@@ -1199,7 +1261,6 @@
                 if (!found && parts.length >= 4) {
                     const test = parts[2] || '';
                     if (test.length <= 4 && test.toUpperCase() !== test) {
-                        // Maybe position is actually in parts[3]
                         const temp = parts[3] || '';
                         if (posKeywords.some(k => temp.toUpperCase().includes(k))) {
                             position = temp;
@@ -1354,7 +1415,7 @@
         }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // CHART RENDER
+        // CHART RENDER (11v11)
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         function renderChart() {
             const container = document.getElementById('chartContainer');
@@ -1418,23 +1479,15 @@
         function formationHTML(team, slots, side) {
             const isOffense = side === 'offense';
 
-            // Build row groups
             let rows = [];
             if (isOffense) {
-                // Row 1: WR1, WR2
                 rows.push(['WR1', 'WR2']);
-                // Row 2: QB, HB, FB
                 rows.push(['QB', 'HB', 'FB']);
-                // Row 3: LT, LG, C, RG, RT
                 rows.push(['LT', 'LG', 'C', 'RG', 'RT']);
             } else {
-                // Row 1: DE1, DT1, DT2, DE2
                 rows.push(['DE1', 'DE2', 'DT1', 'DT2']);
-                // Row 2: LB1, LB2, LB3
                 rows.push(['LB1', 'LB2', 'LB3']);
-                // Row 3: CB1, CB2
                 rows.push(['CB1', 'CB2']);
-                // Row 4: S1, S2
                 rows.push(['S1', 'S2']);
             }
 
@@ -1445,7 +1498,12 @@
                 const cls = rowClass + (idx + 1);
                 html += `<div class="${cls}">`;
                 rowSlots.forEach(slot => {
-                    const starterId = team.offense[slot] || team.defense[slot] || null;
+                    let starterId = null;
+                    if (isOffense) {
+                        starterId = team.offense[slot] || null;
+                    } else {
+                        starterId = team.defense[slot] || null;
+                    }
                     const starter = starterId ? team.players.find(p => p.id === starterId) : null;
 
                     let backupIds = [];
@@ -1459,14 +1517,12 @@
                     html += `<span class="pos-label">${slot}</span>`;
                     html += `<div class="slot-wrap">`;
 
-                    // Starter
                     if (starter) {
                         html += renderPlayerSlot(starter, team.color, false);
                     } else {
                         html += `<div class="player-slot empty-slot">—</div>`;
                     }
 
-                    // Backups (max 2)
                     backups.slice(0, 2).forEach(bp => {
                         html += renderPlayerSlot(bp, team.color, true);
                     });
@@ -1574,6 +1630,72 @@
         }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // PER-TEAM ACTIONS
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function clearTeam(teamKey) {
+            if (!confirm(`Clear all players for ${state[teamKey].name || teamKey}?`)) return;
+            const team = state[teamKey];
+            team.players = [];
+            OFFENSE_SLOTS.forEach(s => team.offense[s] = null);
+            DEFENSE_SLOTS.forEach(s => team.defense[s] = null);
+            team.backups = { offense: {}, defense: {} };
+            OFFENSE_SLOTS.forEach(s => team.backups.offense[s] = []);
+            DEFENSE_SLOTS.forEach(s => team.backups.defense[s] = []);
+            // Keep info fields unchanged.
+            renderAll();
+            saveData();
+            const status = document.getElementById(teamKey + 'actionStatus');
+            if (status) { status.textContent = '✅ Team cleared.'; }
+        }
+
+        function saveTeam(teamKey) {
+            const team = state[teamKey];
+            try {
+                localStorage.setItem(teamKey + '_saved', JSON.stringify(team));
+                const status = document.getElementById(teamKey + 'actionStatus');
+                if (status) { status.textContent = '✅ Team saved.'; }
+            } catch (e) {
+                alert('Save failed: ' + e.message);
+            }
+        }
+
+        function loadTeam(teamKey) {
+            const saved = localStorage.getItem(teamKey + '_saved');
+            if (!saved) {
+                const status = document.getElementById(teamKey + 'actionStatus');
+                if (status) { status.textContent = '❌ No saved data for this team.'; }
+                return;
+            }
+            try {
+                const data = JSON.parse(saved);
+                // Overwrite only that team's properties
+                const team = state[teamKey];
+                Object.keys(data).forEach(key => {
+                    if (key === 'players' || key === 'offense' || key === 'defense' || key === 'backups') {
+                        team[key] = data[key];
+                    } else {
+                        team[key] = data[key];
+                    }
+                });
+                // Ensure backup structures
+                if (!team.backups) team.backups = { offense: {}, defense: {} };
+                if (!team.backups.offense) team.backups.offense = {};
+                if (!team.backups.defense) team.backups.defense = {};
+                OFFENSE_SLOTS.forEach(s => { if (!(s in team.offense)) team.offense[s] = null; });
+                DEFENSE_SLOTS.forEach(s => { if (!(s in team.defense)) team.defense[s] = null; });
+                OFFENSE_SLOTS.forEach(s => { if (!team.backups.offense[s]) team.backups.offense[s] = []; });
+                DEFENSE_SLOTS.forEach(s => { if (!team.backups.defense[s]) team.backups.defense[s] = []; });
+
+                renderAll();
+                saveData();
+                const status = document.getElementById(teamKey + 'actionStatus');
+                if (status) { status.textContent = '✅ Team loaded.'; }
+            } catch (e) {
+                alert('Load failed: ' + e.message);
+            }
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // UI BINDING
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         function bindUI() {
@@ -1609,23 +1731,24 @@
         }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // PERSISTENCE
+        // GLOBAL PERSISTENCE
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         function saveData() {
             try {
-                localStorage.setItem('fbChartData', JSON.stringify(state));
-                alert('✅ Data saved successfully!');
+                localStorage.setItem('fbChartData11', JSON.stringify(state));
+                // Also save individual teams for quick load
+                saveTeam('teamA');
+                saveTeam('teamB');
             } catch (e) {
-                alert('❌ Save failed: ' + e.message);
+                alert('Save failed: ' + e.message);
             }
         }
 
         function loadData() {
-            const saved = localStorage.getItem('fbChartData');
+            const saved = localStorage.getItem('fbChartData11');
             if (!saved) { alert('No saved data found.'); return; }
             try {
                 const parsed = JSON.parse(saved);
-                // Merge with defaults
                 ['teamA', 'teamB'].forEach(tk => {
                     if (!parsed[tk]) return;
                     const t = parsed[tk];
@@ -1635,11 +1758,11 @@
                     OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
                     DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
                     if (!t.players) t.players = [];
+                    state[tk] = t;
                 });
-                state = parsed;
                 renderAll();
                 saveData();
-                alert('✅ Data loaded successfully!');
+                alert('✅ All data loaded successfully!');
             } catch (e) {
                 alert('❌ Failed to load data: ' + e.message);
             }
@@ -1647,16 +1770,11 @@
 
         function clearAllData() {
             if (!confirm('⚠️ Clear all data? This cannot be undone.')) return;
-            localStorage.removeItem('fbChartData');
-            // Reset state
+            localStorage.removeItem('fbChartData11');
+            localStorage.removeItem('teamA_saved');
+            localStorage.removeItem('teamB_saved');
             state.teamA.players = [];
             state.teamB.players = [];
-            state.teamA.offense = {};
-            state.teamB.offense = {};
-            state.teamA.defense = {};
-            state.teamB.defense = {};
-            state.teamA.backups = { offense: {}, defense: {} };
-            state.teamB.backups = { offense: {}, defense: {} };
             OFFENSE_SLOTS.forEach(s => { state.teamA.offense[s] = null;
                 state.teamB.offense[s] = null; });
             DEFENSE_SLOTS.forEach(s => { state.teamA.defense[s] = null;
@@ -1673,7 +1791,6 @@
             state.teamA.players = SAMPLE_A.map(p => ({ ...p, id: genId() }));
             state.teamB.players = SAMPLE_B.map(p => ({ ...p, id: genId() }));
             autoAssignAll();
-            // Also fill in form fields from sample
             document.getElementById('teamAName').value = 'Texas A&M-Commerce';
             document.getElementById('teamAColor').value = '#1F4E78';
             document.getElementById('teamACoach').value = 'Colby Carthel';
@@ -1701,7 +1818,7 @@
         // INIT
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         function init() {
-            const saved = localStorage.getItem('fbChartData');
+            const saved = localStorage.getItem('fbChartData11');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -1714,14 +1831,12 @@
                         OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
                         DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
                         if (!t.players) t.players = [];
+                        state[tk] = t;
                     });
-                    state = parsed;
                 } catch (e) { console.warn('Load failed', e); }
             } else {
-                // Seed with sample
-                state.teamA.players = SAMPLE_A.map(p => ({ ...p, id: genId() }));
-                state.teamB.players = SAMPLE_B.map(p => ({ ...p, id: genId() }));
-                autoAssignAll();
+                seedSampleData();
+                return;
             }
 
             // Ensure all slots exist
@@ -1739,7 +1854,6 @@
 
             bindUI();
             renderAll();
-            // Update color dots
             ['A', 'B'].forEach(t => {
                 const prefix = t === 'A' ? 'teamA' : 'teamB';
                 const c = state[prefix].color || '#1F4E78';
