@@ -20,6 +20,8 @@
             max-width: 1400px;
             margin: 0 auto;
         }
+
+        /* ─── EDITOR PANEL ─── */
         .editor-panel {
             background: #fff;
             padding: 24px;
@@ -383,11 +385,13 @@
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
             overflow: hidden;
         }
+
+        /* ─── CHART PAGES ─── */
         .chart-page {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            padding: 24px 28px;
+            padding: 20px 24px;
             page-break-after: always;
             page-break-inside: avoid;
         }
@@ -405,24 +409,26 @@
             display: flex;
             flex-direction: column;
         }
+
+        /* ─── TEAM INFO ─── */
         .team-info {
-            padding: 12px 14px;
+            padding: 10px 12px;
             border-radius: 6px;
             color: #fff;
-            margin-bottom: 12px;
-            font-size: 11px;
-            line-height: 1.5;
+            margin-bottom: 10px;
+            font-size: 10px;
+            line-height: 1.4;
         }
         .team-info .team-name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             letter-spacing: 0.3px;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
         .team-info .info-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 3px;
         }
         .team-info .info-label {
             font-weight: 600;
@@ -432,47 +438,40 @@
             font-weight: 400;
         }
         .team-info .info-block {
-            margin-top: 3px;
+            margin-top: 2px;
         }
         .team-info .info-block strong {
             opacity: 0.9;
         }
+
+        /* ─── FORMATION HEADER ─── */
         .formation-header {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             text-align: center;
-            padding: 6px 0;
+            padding: 4px 0;
             border-radius: 4px;
             color: #fff;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             letter-spacing: 0.5px;
         }
+
+        /* ─── FORMATION GRID ─── */
         .formation-grid {
             display: flex;
             flex-direction: column;
             gap: 4px;
+            align-items: center;
+            width: 100%;
         }
+
+        /* ─── POSITION ROW ─── */
         .pos-row {
             display: flex;
             gap: 4px;
             justify-content: center;
             align-items: stretch;
-        }
-        .pos-row .pos-label {
-            font-size: 8px;
-            font-weight: 700;
-            color: #666;
-            text-transform: uppercase;
-            writing-mode: vertical-lr;
-            letter-spacing: 0.5px;
-            width: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            background: #f5f7fa;
-            border-radius: 3px;
-            padding: 2px 0;
+            width: 100%;
         }
         .pos-row .slot-wrap {
             display: flex;
@@ -481,39 +480,40 @@
             justify-content: center;
             flex-wrap: wrap;
         }
+
+        /* ─── PLAYER SLOT ─── */
         .player-slot {
-            width: 85px;
-            min-height: 60px;
+            width: 80px;
+            min-height: 54px;
             border: 2px solid #e0e4ea;
             border-radius: 4px;
-            padding: 3px 3px 2px 3px;
+            padding: 2px 3px;
             text-align: center;
             background: #fafbfc;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: 0.05s;
-            flex: 1 1 70px;
-            max-width: 100px;
+            flex: 1 1 60px;
+            max-width: 90px;
         }
         .player-slot.filled {
             border-color: #c8ced6;
             background: #fff;
         }
         .player-slot .jersey {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             color: #fff;
             padding: 0 4px;
             border-radius: 3px;
-            line-height: 1.3;
-            min-width: 24px;
+            line-height: 1.2;
+            min-width: 22px;
             text-align: center;
             width: 100%;
         }
         .player-slot .pname {
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 600;
             line-height: 1.1;
             margin-top: 1px;
@@ -524,7 +524,7 @@
             padding: 0 2px;
         }
         .player-slot .pinfo {
-            font-size: 7px;
+            font-size: 6px;
             color: #888;
             line-height: 1.1;
             white-space: nowrap;
@@ -534,112 +534,118 @@
             padding: 0 2px;
         }
         .player-slot .pbackup {
-            font-size: 6px;
+            font-size: 5px;
             font-weight: 600;
             color: #aaa;
             letter-spacing: 0.3px;
         }
         .player-slot.empty-slot {
             color: #ccc;
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 300;
         }
         .player-slot.backup-slot {
             border-style: dashed;
             border-color: #d5dbe3;
             background: #f8f9fc;
-            min-height: 40px;
-            max-width: 70px;
-            flex: 1 1 55px;
+            min-height: 34px;
+            max-width: 60px;
+            flex: 1 1 45px;
         }
         .player-slot.backup-slot .jersey {
-            font-size: 14px;
-            min-width: 18px;
+            font-size: 12px;
+            min-width: 16px;
         }
         .player-slot.backup-slot .pname {
-            font-size: 7px;
-        }
-        .player-slot.backup-slot .pinfo {
             font-size: 6px;
         }
+        .player-slot.backup-slot .pinfo {
+            font-size: 5px;
+        }
 
-        /* ─── FIXED ROW LAYOUTS ─── */
-        .offense-row-1,
-        .defense-row-1 {
-            display: grid;
+        /* ─── OFFSET POSITION LABEL ─── */
+        .pos-label {
+            font-size: 7px;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #f5f7fa;
+            border-radius: 3px;
+            padding: 0 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 16px;
+            writing-mode: vertical-lr;
+            flex-shrink: 0;
+        }
+
+        /* ─── 2-DEEP OFFENSE ROWS ─── */
+        .offense-row-1 {
+            display: flex;
             gap: 4px;
             justify-content: center;
-        }
-        .offense-row-1 {
-            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            max-width: 400px;
         }
         .offense-row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            display: flex;
             gap: 4px;
             justify-content: center;
+            width: 100%;
+            max-width: 350px;
         }
         .offense-row-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            gap: 4px;
-            justify-content: center;
-        }
-        .defense-row-1 {
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-        }
-        .defense-row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 4px;
-            justify-content: center;
-            max-width: 340px;
-            margin: 0 auto;
-        }
-        .defense-row-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px;
-            justify-content: center;
-            max-width: 200px;
-            margin: 0 auto;
-        }
-        .offense-row-1 .pos-row,
-        .offense-row-2 .pos-row,
-        .offense-row-3 .pos-row,
-        .defense-row-1 .pos-row,
-        .defense-row-2 .pos-row,
-        .defense-row-3 .pos-row {
             display: flex;
             gap: 4px;
             justify-content: center;
-            align-items: stretch;
             width: 100%;
-        }
-        .offense-row-1 .pos-row .slot-wrap,
-        .offense-row-2 .pos-row .slot-wrap,
-        .offense-row-3 .pos-row .slot-wrap,
-        .defense-row-1 .pos-row .slot-wrap,
-        .defense-row-2 .pos-row .slot-wrap,
-        .defense-row-3 .pos-row .slot-wrap {
-            display: flex;
-            gap: 4px;
-            flex: 1;
-            justify-content: center;
-            flex-wrap: wrap;
+            max-width: 480px;
         }
 
+        /* ─── 4-3 DEFENSE ROWS ─── */
+        .defense-row-1 {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .defense-row-2 {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            width: 100%;
+            max-width: 300px;
+        }
+        .defense-row-3 {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            width: 100%;
+            max-width: 200px;
+        }
+        .defense-row-4 {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        /* ─── ROSTER TABLE ─── */
         .roster-section {
-            margin-top: 20px;
-            padding: 0 28px 24px 28px;
+            margin-top: 16px;
+            padding: 0 24px 20px 24px;
             page-break-inside: avoid;
         }
         .roster-section .roster-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 8px;
-            padding-top: 10px;
+            margin-bottom: 6px;
+            padding-top: 8px;
             border-top: 2px solid #e8ecf1;
             color: #1a2a3a;
         }
@@ -649,20 +655,20 @@
         .roster-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 9px;
+            font-size: 8px;
         }
         .roster-table thead {
             background: #1a2a3a;
             color: #fff;
         }
         .roster-table th {
-            padding: 4px 8px;
+            padding: 3px 6px;
             text-align: left;
             font-weight: 700;
             border: 1px solid #2d4055;
         }
         .roster-table td {
-            padding: 3px 8px;
+            padding: 2px 6px;
             border: 1px solid #dde2e8;
         }
         .roster-table tbody tr:nth-child(even) {
@@ -671,16 +677,16 @@
         .roster-table .team-divider td {
             background: #e8ecf1;
             font-weight: 700;
-            font-size: 10px;
-            padding: 4px 8px;
+            font-size: 9px;
+            padding: 3px 6px;
             border-color: #d0d7df;
         }
         .roster-empty {
             text-align: center;
             color: #bbb;
-            padding: 20px 0;
+            padding: 16px 0;
             font-style: italic;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         /* ─── TOAST ─── */
@@ -695,14 +701,14 @@
             pointer-events: none;
         }
         .toast {
-            padding: 12px 20px;
+            padding: 10px 18px;
             border-radius: 8px;
             color: #fff;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.5s forwards;
-            min-width: 240px;
+            min-width: 200px;
             pointer-events: auto;
         }
         .toast.success { background: #27ae60; }
@@ -716,7 +722,7 @@
             to { opacity: 0; transform: translateY(-10px); }
         }
 
-        /* ─── PRINT FIX ─── */
+        /* ─── PRINT ─── */
         @media print {
             .no-print { display: none !important; }
             body { 
@@ -736,8 +742,8 @@
             .chart-page {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr !important;
-                gap: 16px !important;
-                padding: 0.3in 0.25in !important;
+                gap: 12px !important;
+                padding: 0.2in 0.2in !important;
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
                 margin: 0 !important;
@@ -752,59 +758,46 @@
             }
             .toast-container { display: none !important; }
             .player-slot { 
-                min-height: 44px !important;
-                padding: 2px !important;
-                flex: 1 1 55px !important;
-                max-width: 75px !important;
+                min-height: 38px !important;
+                padding: 1px 2px !important;
+                flex: 1 1 45px !important;
+                max-width: 65px !important;
             }
-            .player-slot .jersey { font-size: 15px !important; min-width: 18px !important; }
-            .player-slot .pname { font-size: 7px !important; }
-            .player-slot .pinfo { font-size: 6px !important; }
-            .player-slot.backup-slot { min-height: 30px !important; flex: 1 1 40px !important; max-width: 55px !important; }
-            .player-slot.backup-slot .jersey { font-size: 11px !important; min-width: 14px !important; }
-            .pos-row .pos-label { font-size: 6px !important; width: 12px !important; }
-            .roster-table { font-size: 7px !important; }
-            .roster-table th, .roster-table td { padding: 2px 4px !important; }
-            .team-info { padding: 6px 8px !important; font-size: 9px !important; }
-            .team-info .team-name { font-size: 13px !important; }
-            .formation-header { font-size: 10px !important; padding: 3px 0 !important; }
+            .player-slot .jersey { font-size: 13px !important; min-width: 16px !important; }
+            .player-slot .pname { font-size: 6px !important; }
+            .player-slot .pinfo { font-size: 5px !important; }
+            .player-slot.backup-slot { min-height: 26px !important; flex: 1 1 32px !important; max-width: 45px !important; }
+            .player-slot.backup-slot .jersey { font-size: 10px !important; min-width: 12px !important; }
+            .pos-label { font-size: 5px !important; min-width: 10px !important; }
+            .roster-table { font-size: 6px !important; }
+            .roster-table th, .roster-table td { padding: 1px 3px !important; }
+            .team-info { padding: 4px 6px !important; font-size: 8px !important; }
+            .team-info .team-name { font-size: 11px !important; }
+            .formation-header { font-size: 9px !important; padding: 2px 0 !important; }
             .offense-row-1, .offense-row-2, .offense-row-3, 
-            .defense-row-1, .defense-row-2, .defense-row-3 {
+            .defense-row-1, .defense-row-2, .defense-row-3, .defense-row-4 {
                 gap: 2px !important;
             }
             .roster-section {
-                margin-top: 8px !important;
-                padding: 0 0.2in 0.15in 0.2in !important;
+                margin-top: 6px !important;
+                padding: 0 0.15in 0.1in 0.15in !important;
             }
             .roster-section .roster-title {
-                font-size: 10px !important;
-                padding-top: 4px !important;
+                font-size: 9px !important;
+                padding-top: 3px !important;
             }
-            .offense-row-3 {
-                grid-template-columns: 1fr 1fr 1fr 1fr 1fr !important;
-            }
-            .defense-row-1 {
-                grid-template-columns: 1fr 1fr 1fr 1fr !important;
-            }
-            .defense-row-2 {
-                grid-template-columns: 1fr 1fr 1fr !important;
-                max-width: 260px !important;
-            }
-            .defense-row-3 {
-                grid-template-columns: 1fr 1fr !important;
-                max-width: 150px !important;
-            }
-            .offense-row-1 {
-                grid-template-columns: 1fr 1fr !important;
-            }
-            .offense-row-2 {
-                grid-template-columns: 1fr 1fr 1fr !important;
-            }
+            .offense-row-1 { max-width: 300px !important; }
+            .offense-row-2 { max-width: 260px !important; }
+            .offense-row-3 { max-width: 360px !important; }
+            .defense-row-1 { max-width: 300px !important; }
+            .defense-row-2 { max-width: 220px !important; }
+            .defense-row-3 { max-width: 150px !important; }
+            .defense-row-4 { max-width: 150px !important; }
         }
 
         @page {
             size: 11in 14in landscape;
-            margin: 0.15in;
+            margin: 0.1in;
         }
     </style>
 </head>
@@ -955,13 +948,13 @@
     </div>
 
     <script>
-        const OFFENSE_SLOTS = ['QB', 'HB', 'FB', 'WR1', 'WR2', 'TE', 'LT', 'LG', 'C', 'RG', 'RT'];
+        const OFFENSE_SLOTS = ['WR1', 'WR2', 'QB', 'RB', 'FB', 'TE', 'LT', 'LG', 'C', 'RG', 'RT'];
         const DEFENSE_SLOTS = ['DE1', 'DE2', 'DT1', 'DT2', 'LB1', 'LB2', 'LB3', 'CB1', 'CB2', 'S1', 'S2'];
 
         const POS_MAP = {
             QB: 'QB',
-            HB: 'HB',
-            RB: 'HB',
+            HB: 'RB',
+            RB: 'RB',
             FB: 'FB',
             WR: 'WR1',
             WR1: 'WR1',
@@ -1269,8 +1262,6 @@
         function generatePage(leftKey, leftSide, rightKey, rightSide, pageNum) {
             const leftTeam = state[leftKey];
             const rightTeam = state[rightKey];
-            const leftSlots = leftSide === 'offense' ? OFFENSE_SLOTS : DEFENSE_SLOTS;
-            const rightSlots = rightSide === 'offense' ? OFFENSE_SLOTS : DEFENSE_SLOTS;
             const leftLabel = leftSide === 'offense' ? 'OFFENSE' : 'DEFENSE (4-3)';
             const rightLabel = rightSide === 'offense' ? 'OFFENSE' : 'DEFENSE (4-3)';
             return `
@@ -1278,12 +1269,12 @@
                     <div class="team-section">
                         ${teamInfoHTML(leftTeam)}
                         <div class="formation-header" style="background:${leftTeam.color || '#1F4E78'};">${leftLabel}</div>
-                        ${formationHTML(leftTeam, leftSlots, leftSide)}
+                        ${formationHTML(leftTeam, leftSide)}
                     </div>
                     <div class="team-section">
                         ${teamInfoHTML(rightTeam)}
                         <div class="formation-header" style="background:${rightTeam.color || '#2d8659'};">${rightLabel}</div>
-                        ${formationHTML(rightTeam, rightSlots, rightSide)}
+                        ${formationHTML(rightTeam, rightSide)}
                     </div>
                 </div>
             `;
@@ -1304,50 +1295,90 @@
             `;
         }
 
-        function formationHTML(team, slots, side) {
+        function formationHTML(team, side) {
             const isOffense = side === 'offense';
-            let rows = [];
-            if (isOffense) {
-                rows.push(['WR1', 'WR2']);
-                rows.push(['QB', 'HB', 'FB']);
-                rows.push(['LT', 'LG', 'C', 'RG', 'RT']);
-            } else {
-                rows.push(['DE1', 'DE2', 'DT1', 'DT2']);
-                rows.push(['LB1', 'LB2', 'LB3']);
-                rows.push(['CB1', 'CB2']);
-                rows.push(['S1', 'S2']);
-            }
-            const rowClass = isOffense ? 'offense-row-' : 'defense-row-';
             let html = '<div class="formation-grid">';
-            rows.forEach((rowSlots, idx) => {
-                const cls = rowClass + (idx + 1);
-                html += `<div class="${cls}">`;
-                rowSlots.forEach(slot => {
-                    let starterId = null;
-                    if (isOffense) { starterId = team.offense[slot] || null; } else { starterId = team.defense[slot] || null; }
-                    const starter = starterId ? team.players.find(p => p.id === starterId) : null;
-                    let backupIds = [];
-                    if (team.backups) {
-                        const bk = isOffense ? team.backups.offense : team.backups.defense;
-                        if (bk && bk[slot]) backupIds = bk[slot] || [];
-                    }
-                    const backups = backupIds.map(id => team.players.find(p => p.id === id)).filter(Boolean);
-                    html += `<div class="pos-row">`;
-                    html += `<span class="pos-label">${slot}</span>`;
-                    html += `<div class="slot-wrap">`;
-                    if (starter) {
-                        html += renderPlayerSlot(starter, team.color, false);
-                    } else {
-                        html += `<div class="player-slot empty-slot">—</div>`;
-                    }
-                    backups.slice(0, 2).forEach(bp => {
-                        html += renderPlayerSlot(bp, team.color, true);
-                    });
-                    html += `</div></div>`;
+
+            if (isOffense) {
+                // Row 1: WR1, WR2 (wide receivers)
+                html += `<div class="offense-row-1">`;
+                ['WR1', 'WR2'].forEach(slot => {
+                    html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
-            });
+
+                // Row 2: QB, RB, FB (backfield)
+                html += `<div class="offense-row-2">`;
+                ['QB', 'RB', 'FB'].forEach(slot => {
+                    html += renderSlot(team, slot, isOffense);
+                });
+                html += `</div>`;
+
+                // Row 3: LT, LG, C, RG, RT (offensive line)
+                html += `<div class="offense-row-3">`;
+                ['LT', 'LG', 'C', 'RG', 'RT'].forEach(slot => {
+                    html += renderSlot(team, slot, isOffense);
+                });
+                html += `</div>`;
+            } else {
+                // Defense - 4-3
+                // Row 1: DE1, DT1, DT2, DE2 (defensive line)
+                html += `<div class="defense-row-1">`;
+                ['DE1', 'DT1', 'DT2', 'DE2'].forEach(slot => {
+                    html += renderSlot(team, slot, isOffense);
+                });
+                html += `</div>`;
+
+                // Row 2: LB1, LB2, LB3 (linebackers)
+                html += `<div class="defense-row-2">`;
+                ['LB1', 'LB2', 'LB3'].forEach(slot => {
+                    html += renderSlot(team, slot, isOffense);
+                });
+                html += `</div>`;
+
+                // Row 3: CB1, CB2 (cornerbacks)
+                html += `<div class="defense-row-3">`;
+                ['CB1', 'CB2'].forEach(slot => {
+                    html += renderSlot(team, slot, isOffense);
+                });
+                html += `</div>`;
+
+                // Row 4: S1, S2 (safeties)
+                html += `<div class="defense-row-4">`;
+                ['S1', 'S2'].forEach(slot => {
+                    html += renderSlot(team, slot, isOffense);
+                });
+                html += `</div>`;
+            }
+
             html += '</div>';
+            return html;
+        }
+
+        function renderSlot(team, slot, isOffense) {
+            let starterId = null;
+            if (isOffense) { starterId = team.offense[slot] || null; } else { starterId = team.defense[slot] || null; }
+            const starter = starterId ? team.players.find(p => p.id === starterId) : null;
+
+            let backupIds = [];
+            if (team.backups) {
+                const bk = isOffense ? team.backups.offense : team.backups.defense;
+                if (bk && bk[slot]) backupIds = bk[slot] || [];
+            }
+            const backups = backupIds.map(id => team.players.find(p => p.id === id)).filter(Boolean);
+
+            let html = `<div class="pos-row">`;
+            html += `<span class="pos-label">${slot}</span>`;
+            html += `<div class="slot-wrap">`;
+            if (starter) {
+                html += renderPlayerSlot(starter, team.color, false);
+            } else {
+                html += `<div class="player-slot empty-slot">—</div>`;
+            }
+            backups.slice(0, 2).forEach(bp => {
+                html += renderPlayerSlot(bp, team.color, true);
+            });
+            html += `</div></div>`;
             return html;
         }
 
