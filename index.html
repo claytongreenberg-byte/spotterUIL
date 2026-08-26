@@ -1506,7 +1506,8 @@
                             document.getElementById(prefix + 'Dot').style.background = el.value;
                         }
                         renderAll();
-                        saveData();
+                        // Auto-save without toast
+                        saveDataSilent();
                     });
                     if (f === 'Color') {
                         el.addEventListener('change', () => {
@@ -1515,11 +1516,32 @@
                             if (label) { label.style.background = el.value; }
                             document.getElementById(prefix + 'Dot').style.background = el.value;
                             renderAll();
-                            saveData();
+                            saveDataSilent();
                         });
                     }
                 });
             });
+        }
+
+        // Silent save – no toast notification
+        function saveDataSilent() {
+            try {
+                localStorage.setItem('fbChartData11', JSON.stringify(state));
+                saveTeamSilent('teamA');
+                saveTeamSilent('teamB');
+            } catch (e) { 
+                // Silent fail – no toast
+            }
+        }
+
+        // Silent team save – no toast notification
+        function saveTeamSilent(teamKey) {
+            try {
+                const team = state[teamKey];
+                localStorage.setItem(teamKey + '_saved_11', JSON.stringify(team));
+            } catch (e) {
+                // Silent fail
+            }
         }
 
         function saveData() {
@@ -1553,7 +1575,7 @@
                     state[tk] = t;
                 });
                 renderAll();
-                saveData();
+                saveDataSilent();
                 showToast('✅ All data loaded successfully!', 'success');
             } catch (e) { 
                 showToast('❌ Failed to load data: ' + e.message, 'error');
