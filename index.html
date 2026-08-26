@@ -846,6 +846,7 @@
     </style>
 </head>
 <body>
+    <div class="toast-container" id="toastContainer"></div>
     <div class="container">
         <div class="editor-panel no-print">
             <div class="panel-title">
@@ -1056,7 +1057,24 @@
 
         let idCounter = 1000;
 
+        function genId() { return ++idCounter; }         let idCounter = 1000;
+
         function genId() { return ++idCounter; }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // TOAST NOTIFICATIONS
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentNode) toast.remove();
+            }, 3000);
+        }
 
         function initState() {
             ['teamA', 'teamB'].forEach(tk => {
@@ -1166,11 +1184,12 @@
                 if (!exists) teamState.players.push(p);
             });
             autoAssignTeam(prefix);
-            status.textContent = `✅ Imported ${parsed.length} players (${teamState.players.length} total).`;
+                        status.textContent = `✅ Imported ${parsed.length} players (${teamState.players.length} total).`;
             status.className = 'import-status';
             input.value = '';
             renderAll();
             saveData();
+            showToast(`✅ Imported ${parsed.length} players!`, 'success');
         }
 
         function removePlayer(id, teamKey) {
@@ -1413,7 +1432,7 @@
             return html;
         }
 
-        function clearTeam(teamKey) {
+              function clearTeam(teamKey) {
             if (!confirm(`Clear all players for ${state[teamKey].name || teamKey}?`)) return;
             const team = state[teamKey];
             team.players = [];
@@ -1426,22 +1445,26 @@
             saveData();
             const status = document.getElementById(teamKey + 'actionStatus');
             if (status) { status.textContent = '✅ Team cleared.'; }
+            showToast(`🗑 ${team.name || teamKey} cleared!`, 'info');
         }
 
-        function saveTeam(teamKey) {
+               function saveTeam(teamKey) {
             const team = state[teamKey];
             try {
                 localStorage.setItem(teamKey + '_saved_11', JSON.stringify(team));
                 const status = document.getElementById(teamKey + 'actionStatus');
                 if (status) { status.textContent = '✅ Team saved.'; }
-            } catch (e) { alert('Save failed: ' + e.message); }
+                showToast(`✅ ${team.name || teamKey} saved!`, 'success');
+            } catch (e) { 
+                showToast('❌ Save failed: ' + e.message, 'error');
+            }
         }
-
         function loadTeam(teamKey) {
             const saved = localStorage.getItem(teamKey + '_saved_11');
             if (!saved) {
                 const status = document.getElementById(teamKey + 'actionStatus');
                 if (status) { status.textContent = '❌ No saved data for this team.'; }
+                showToast(`❌ No saved data for ${state[teamKey].name || teamKey}`, 'error');
                 return;
             }
             try {
@@ -1459,7 +1482,10 @@
                 saveData();
                 const status = document.getElementById(teamKey + 'actionStatus');
                 if (status) { status.textContent = '✅ Team loaded.'; }
-            } catch (e) { alert('Load failed: ' + e.message); }
+                showToast(`✅ ${team.name || teamKey} loaded!`, 'success');
+            } catch (e) { 
+                showToast('❌ Load failed: ' + e.message, 'error');
+            }
         }
 
         function bindUI() {
@@ -1494,17 +1520,23 @@
             });
         }
 
-        function saveData() {
+               function saveData() {
             try {
                 localStorage.setItem('fbChartData11', JSON.stringify(state));
                 saveTeam('teamA');
                 saveTeam('teamB');
-            } catch (e) { alert('Save failed: ' + e.message); }
+                showToast('✅ All data saved!', 'success');
+            } catch (e) { 
+                showToast('❌ Save failed: ' + e.message, 'error');
+            }
         }
 
-        function loadData() {
+               function loadData() {
             const saved = localStorage.getItem('fbChartData11');
-            if (!saved) { alert('No saved data found.'); return; }
+            if (!saved) { 
+                showToast('❌ No saved data found.', 'error');
+                return; 
+            }
             try {
                 const parsed = JSON.parse(saved);
                 ['teamA', 'teamB'].forEach(tk => {
@@ -1520,16 +1552,19 @@
                 });
                 renderAll();
                 saveData();
-                alert('✅ All data loaded successfully!');
-            } catch (e) { alert('❌ Failed to load data: ' + e.message); }
+                showToast('✅ All data loaded successfully!', 'success');
+            } catch (e) { 
+                showToast('❌ Failed to load data: ' + e.message, 'error');
+            }
         }
 
-        function clearAllData() {
+              function clearAllData() {
             if (!confirm('⚠️ Clear all data? This cannot be undone.')) return;
             localStorage.removeItem('fbChartData11');
             localStorage.removeItem('teamA_saved_11');
             localStorage.removeItem('teamB_saved_11');
             initState();
+            showToast('🗑 All data cleared!', 'info');
         }
 
         function init() {
