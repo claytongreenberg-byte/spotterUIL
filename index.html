@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Radio Chart Generator</title>
+    <title>7‑on‑7 Football Radio Chart Generator</title>
     <style>
-        /* ─── RESET & BASE ─── */
         * {
             margin: 0;
             padding: 0;
@@ -21,8 +20,6 @@
             max-width: 1400px;
             margin: 0 auto;
         }
-
-        /* ─── EDITOR PANEL ─── */
         .editor-panel {
             background: #fff;
             padding: 24px;
@@ -40,10 +37,14 @@
             align-items: center;
             gap: 12px;
         }
-        .panel-title span {
-            color: #1a2a3a;
+        .panel-title .badge {
+            background: #2d8659;
+            color: #fff;
+            font-size: 12px;
+            padding: 2px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
         }
-
         .teams-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -55,7 +56,6 @@
                 grid-template-columns: 1fr;
             }
         }
-
         .team-card {
             background: #f8f9fc;
             border-radius: 8px;
@@ -84,7 +84,6 @@
             display: inline-block;
             flex-shrink: 0;
         }
-
         .form-row {
             display: flex;
             flex-direction: column;
@@ -140,8 +139,6 @@
             flex: 1;
             text-align: center;
         }
-
-        /* ─── IMPORT SECTION ─── */
         .import-section {
             background: #f8f9fc;
             border-radius: 8px;
@@ -207,8 +204,6 @@
         .import-status.error {
             color: #c0392b;
         }
-
-        /* ─── BENCH ─── */
         .bench-area {
             margin-top: 10px;
             padding: 8px 10px;
@@ -267,8 +262,6 @@
             color: #bbb;
             padding: 4px 0;
         }
-
-        /* ─── TEAM ACTION BUTTONS ─── */
         .team-actions {
             display: flex;
             gap: 6px;
@@ -316,8 +309,6 @@
             margin-top: 4px;
             min-height: 16px;
         }
-
-        /* ─── CONTROLS ─── */
         .controls-bar {
             display: flex;
             gap: 10px;
@@ -361,8 +352,6 @@
         .controls-bar button.success:hover {
             background: #1e8449;
         }
-
-        /* ─── PRINT CONTROLS ─── */
         .print-section {
             text-align: center;
             margin: 20px 0 16px 0;
@@ -388,16 +377,12 @@
             color: #888;
             margin-top: 6px;
         }
-
-        /* ─── CHART CONTAINER ─── */
         .chart-container {
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
             overflow: hidden;
         }
-
-        /* ─── CHART PAGES ─── */
         .chart-page {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -416,13 +401,10 @@
                 padding: 20px;
             }
         }
-
         .team-section {
             display: flex;
             flex-direction: column;
         }
-
-        /* ─── TEAM INFO PANEL ─── */
         .team-info {
             padding: 14px 16px;
             border-radius: 6px;
@@ -455,8 +437,6 @@
         .team-info .info-block strong {
             opacity: 0.9;
         }
-
-        /* ─── FORMATION HEADER ─── */
         .formation-header {
             font-size: 14px;
             font-weight: 700;
@@ -467,8 +447,6 @@
             margin-bottom: 12px;
             letter-spacing: 0.5px;
         }
-
-        /* ─── FORMATION GRID ─── */
         .formation-grid {
             display: flex;
             flex-direction: column;
@@ -565,7 +543,6 @@
             font-size: 10px;
             font-weight: 300;
         }
-
         .player-slot.backup-slot {
             border-style: dashed;
             border-color: #d5dbe3;
@@ -583,44 +560,7 @@
         .player-slot.backup-slot .pinfo {
             font-size: 7px;
         }
-
-        /* 11v11 offense rows */
         .offense-row-1 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5px;
-            justify-content: center;
-        }
-        .offense-row-1 .pos-row {
-            justify-content: center;
-        }
-        .offense-row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 5px;
-            justify-content: center;
-        }
-        .offense-row-2 .pos-row {
-            justify-content: center;
-        }
-        .offense-row-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            gap: 5px;
-            justify-content: center;
-        }
-        .offense-row-3 .pos-row {
-            justify-content: center;
-        }
-
-        /* 11v11 defense rows */
-        .defense-row-1 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 5px;
-            justify-content: center;
-        }
-        .defense-row-2 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 5px;
@@ -628,16 +568,42 @@
             max-width: 400px;
             margin: 0 auto;
         }
+        .offense-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 5px;
+            justify-content: center;
+        }
+        .offense-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            justify-content: center;
+            max-width: 260px;
+            margin: 0 auto;
+        }
+        .defense-row-1 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5px;
+            justify-content: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .defense-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 5px;
+            justify-content: center;
+        }
         .defense-row-3 {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 5px;
             justify-content: center;
-            max-width: 280px;
+            max-width: 260px;
             margin: 0 auto;
         }
-
-        /* ─── ROSTER TABLE ─── */
         .roster-section {
             margin-top: 24px;
             padding: 0 36px 32px 36px;
@@ -691,8 +657,6 @@
             font-style: italic;
             font-size: 13px;
         }
-
-        /* ─── PRINT STYLES ─── */
         @media print {
             body {
                 background: #fff !important;
@@ -777,50 +741,51 @@
                 font-size: 12px !important;
                 padding-top: 8px !important;
             }
-            .offense-row-1,
-            .offense-row-2,
-            .offense-row-3,
-            .defense-row-1,
-            .defense-row-2,
-            .defense-row-3 {
-                gap: 3px !important;
-            }
-            .offense-row-3 {
-                grid-template-columns: 1fr 1fr 1fr 1fr 1fr !important;
-            }
-            .defense-row-1 {
-                grid-template-columns: 1fr 1fr 1fr 1fr !important;
-            }
-            .defense-row-2 {
+            .offense-row-1 {
                 grid-template-columns: 1fr 1fr 1fr !important;
                 max-width: 320px !important;
             }
+            .offense-row-2 {
+                grid-template-columns: 1fr 1fr 1fr 1fr !important;
+            }
+            .offense-row-3 {
+                grid-template-columns: 1fr 1fr !important;
+                max-width: 200px !important;
+            }
+            .defense-row-1 {
+                grid-template-columns: 1fr 1fr 1fr !important;
+                max-width: 320px !important;
+            }
+            .defense-row-2 {
+                grid-template-columns: 1fr 1fr 1fr 1fr !important;
+            }
             .defense-row-3 {
                 grid-template-columns: 1fr 1fr !important;
-                max-width: 220px !important;
+                max-width: 200px !important;
             }
         }
-
         @page {
             size: 11in 14in;
             margin: 0.4in;
         }
-
-        /* ─── RESPONSIVE TWEAKS ─── */
         @media (max-width: 700px) {
+            .offense-row-1 {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            .offense-row-2 {
+                grid-template-columns: 1fr 1fr !important;
+            }
             .offense-row-3 {
-                grid-template-columns: 1fr 1fr 1fr !important;
+                grid-template-columns: 1fr !important;
             }
             .defense-row-1 {
                 grid-template-columns: 1fr 1fr !important;
             }
             .defense-row-2 {
                 grid-template-columns: 1fr 1fr !important;
-                max-width: 100% !important;
             }
             .defense-row-3 {
                 grid-template-columns: 1fr !important;
-                max-width: 100% !important;
             }
             .player-slot {
                 max-width: 80px !important;
@@ -852,7 +817,10 @@
 
         <!-- EDITOR PANEL -->
         <div class="editor-panel no-print">
-            <div class="panel-title">🏈 Football Radio Chart Generator</div>
+            <div class="panel-title">
+                🏈 7‑on‑7 Radio Chart Generator
+                <span class="badge">7v7</span>
+            </div>
 
             <div class="teams-grid">
                 <!-- TEAM A -->
@@ -897,7 +865,7 @@
                     <div class="import-section" style="margin-top:12px;">
                         <h4>📋 Import Roster</h4>
                         <div class="hint">Format: # | Name | Pos | Ht/Wt | School | Stats</div>
-                        <textarea id="teamARosterInput" placeholder="#17 | Steven Baker | QB | 6-2 210 | Angelo State | 24-12 (4th)&#10;#27 | Trey Porter | RB | 5-11 205 | Delta State | 162yds 3TD"></textarea>
+                        <textarea id="teamARosterInput" placeholder="#7 | Steven Baker | QB | 6-2 210 | Angelo State | 24-12 (4th)&#10;#27 | Trey Porter | RB | 5-11 205 | Delta State | 162yds 3TD"></textarea>
                         <div class="import-actions">
                             <button class="parse-btn" onclick="parseRoster('A')">🔍 Parse &amp; Import</button>
                             <button class="clear-btn" onclick="document.getElementById('teamARosterInput').value=''">Clear</button>
@@ -909,7 +877,6 @@
                         </div>
                     </div>
 
-                    <!-- Team Action Buttons -->
                     <div class="team-actions">
                         <button class="danger" onclick="clearTeam('teamA')">🗑 Clear Team</button>
                         <button class="success" onclick="saveTeam('teamA')">💾 Save Team</button>
@@ -972,7 +939,6 @@
                         </div>
                     </div>
 
-                    <!-- Team Action Buttons -->
                     <div class="team-actions">
                         <button class="danger" onclick="clearTeam('teamB')">🗑 Clear Team</button>
                         <button class="success" onclick="saveTeam('teamB')">💾 Save Team</button>
@@ -982,7 +948,6 @@
                 </div>
             </div>
 
-            <!-- CONTROLS -->
             <div class="controls-bar">
                 <button class="danger" onclick="clearAllData()">🗑 Clear All</button>
                 <button class="success" onclick="saveData()">💾 Save All Data</button>
@@ -991,57 +956,53 @@
             </div>
         </div>
 
-        <!-- PRINT SECTION -->
         <div class="print-section no-print">
             <button class="print-btn" onclick="window.print()">🖨️ PRINT CHART (Legal Size)</button>
             <div class="print-hint">Set printer to Legal (8.5" × 14") or larger for best results</div>
         </div>
 
-        <!-- CHART OUTPUT -->
         <div class="chart-container" id="chartContainer"></div>
 
     </div>
 
     <script>
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 11v11 POSITION DEFINITIONS
+        // 7‑on‑7 POSITIONS
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        const OFFENSE_SLOTS = ['QB', 'HB', 'FB', 'WR1', 'WR2', 'TE', 'LT', 'LG', 'C', 'RG', 'RT'];
-        const DEFENSE_SLOTS = ['DE1', 'DE2', 'DT1', 'DT2', 'LB1', 'LB2', 'LB3', 'CB1', 'CB2', 'S1', 'S2'];
+        const OFFENSE_SLOTS_7 = ['QB', 'C', 'X', 'Z', 'Y', 'H', 'RB'];
+        const DEFENSE_SLOTS_7 = ['CB1', 'CB2', 'S1', 'S2', 'RUSH1', 'RUSH2', 'RUSH3'];
 
-        const POS_MAP = {
+        const POS_MAP_7 = {
             QB: 'QB',
-            HB: 'HB',
-            RB: 'HB',
-            FB: 'FB',
-            WR: 'WR1',
-            WR1: 'WR1',
-            WR2: 'WR2',
-            TE: 'TE',
-            LT: 'LT',
-            LG: 'LG',
             C: 'C',
-            RG: 'RG',
-            RT: 'RT',
-            DE: 'DE1',
-            DE1: 'DE1',
-            DE2: 'DE2',
-            DT: 'DT1',
-            DT1: 'DT1',
-            DT2: 'DT2',
-            LB: 'LB1',
-            LB1: 'LB1',
-            LB2: 'LB2',
-            LB3: 'LB3',
+            CENTER: 'C',
+            X: 'X',
+            Z: 'Z',
+            Y: 'Y',
+            H: 'H',
+            RB: 'RB',
+            HB: 'RB',
+            WR: 'X',
+            WR1: 'X',
+            WR2: 'Z',
+            SLOT: 'Y',
+            TE: 'Y',
             CB: 'CB1',
             CB1: 'CB1',
             CB2: 'CB2',
             S: 'S1',
-            S1: 'S1',
-            S2: 'S2',
             SAF: 'S1',
             FS: 'S1',
             SS: 'S2',
+            S1: 'S1',
+            S2: 'S2',
+            LB: 'RUSH1',
+            RUSH: 'RUSH1',
+            RUSH1: 'RUSH1',
+            RUSH2: 'RUSH2',
+            RUSH3: 'RUSH3',
+            DE: 'RUSH1',
+            DT: 'RUSH2',
         };
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1083,113 +1044,84 @@
         function genId() { return ++idCounter; }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // SAMPLE DATA
+        // SAMPLE DATA FOR 7‑on‑7
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        const SAMPLE_A = [
-            { number: '17', name: 'Steven Baker', position: 'QB', htWt: '6-2 210', school: 'Angelo State',
+        const SAMPLE_A_7 = [
+            { number: '7', name: 'Steven Baker', position: 'QB', htWt: '6-2 210', school: 'Angelo State',
                 stats: '24-12 (4th)' },
-            { number: '27', name: 'Trey Porter', position: 'HB', htWt: '5-11 205', school: 'Delta State',
-            stats: '162yds 3TD' },
-            { number: '24', name: 'Chris Smith', position: 'WR1', htWt: '6-1 190', school: 'Mansfield HS',
+            { number: '55', name: 'John Center', position: 'C', htWt: '6-1 285', school: 'Roosevelt HS', stats: '' },
+            { number: '1', name: 'Lance Evans', position: 'X', htWt: '6-3 200', school: 'Mansfield HS',
                 stats: '50rec 986yds' },
-            { number: '47', name: 'Brent Walker', position: 'TE', htWt: '6-4 250', school: 'Kilgore College',
-                stats: '15rec 157yds' },
-            { number: '74', name: 'Jared Machoro', position: 'LT', htWt: '6-7 280', school: 'Coldspring-Oakhurst HS',
-                stats: '' },
-            { number: '76', name: 'Jason Osei', position: 'LG', htWt: '6-5 300', school: 'Baylor', stats: 'All-LSC 2nd' },
-            { number: '56', name: 'John Aguilar', position: 'C', htWt: '6-1 285', school: 'Roosevelt HS', stats: '' },
-            { number: '63', name: 'Avery Poates', position: 'RG', htWt: '6-5 300', school: 'Nevada', stats: 'All-LSC HM' },
-            { number: '79', name: 'Poet Thomas', position: 'RT', htWt: '6-6 325', school: 'Texas Tech', stats: '' },
-            { number: '3', name: 'Lance Evans', position: 'WR2', htWt: '6-3 200', school: 'Mansfield HS',
-                stats: 'All-LSC 1st' },
-            { number: '8', name: 'Metrelle Taylor', position: 'FB', htWt: '6-1 185', school: 'Pasadena HS',
+            { number: '3', name: 'Darby Smith', position: 'Z', htWt: '5-10 180', school: 'Ennis HS', stats: '868yds 8TD' },
+            { number: '10', name: 'Metrelle Taylor', position: 'Y', htWt: '6-1 185', school: 'Pasadena HS',
                 stats: '5rec 36yds' },
-            { number: '15', name: 'Erin Brown', position: 'DE1', htWt: '6-3 255', school: 'Hinds CC', stats: '3 tackles' },
-            { number: '54', name: 'J\'Terian Wren', position: 'DT1', htWt: '6-0 262', school: 'Broadstreet HS',
-                stats: '5 tackles' },
-            { number: '53', name: 'D\'Quin Andrews', position: 'DT2', htWt: '6-3 295', school: 'Coahoma CC', stats: '' },
-            { number: '55', name: 'Eric Sadler', position: 'DE2', htWt: '6-3 250', school: 'NE Oklahoma A&M',
-                stats: '5 tackles' },
-            { number: '30', name: 'Daniel Johnson', position: 'LB1', htWt: '6-1 225', school: 'Itawamba CC', stats: '' },
-            { number: '29', name: 'CJ Johnson', position: 'LB2', htWt: '6-2 220', school: 'SW Mississippi CC',
-                stats: '3 tackles' },
-            { number: '7', name: 'Reco Beckwith', position: 'LB3', htWt: '6-0 205', school: 'Winnsboro HS',
-                stats: '148 tackles' },
-            { number: '38', name: 'Chris Pickett', position: 'CB1', htWt: '6-0 170', school: 'Choctawhatchee HS',
-                stats: '' },
-            { number: '3', name: 'Romelo Wilson', position: 'CB2', htWt: '5-11 170', school: 'Campbell HS',
+            { number: '12', name: 'Chris Chumley', position: 'H', htWt: '6-4 250', school: 'Kilgore College',
+                stats: '15rec 157yds' },
+            { number: '23', name: 'Richard Cooper', position: 'RB', htWt: '5-9 195', school: 'Angleton HS',
+                stats: '1331yds 7TD' },
+            { number: '2', name: 'Romelo Wilson', position: 'CB1', htWt: '5-11 170', school: 'Campbell HS',
                 stats: '8 INTs' },
-            { number: '27', name: 'Tyrell Brown', position: 'S1', htWt: '5-11 190', school: 'Appalachian State',
+            { number: '4', name: 'Chris Pickett', position: 'CB2', htWt: '6-0 170', school: 'Choctawhatchee HS',
                 stats: '' },
-            { number: '13', name: 'De\'Quan Reddick', position: 'S2', htWt: '6-0 205', school: 'New Mexico Military CC',
+            { number: '21', name: 'Tyrell Brown', position: 'S1', htWt: '5-11 190', school: 'Appalachian State',
+                stats: '' },
+            { number: '22', name: 'De\'Quan Reddick', position: 'S2', htWt: '6-0 205', school: 'New Mexico Military CC',
+                stats: '5 tackles' },
+            { number: '54', name: 'J\'Terian Wren', position: 'RUSH1', htWt: '6-0 262', school: 'Broadstreet HS',
+                stats: '5 tackles' },
+            { number: '53', name: 'D\'Quin Andrews', position: 'RUSH2', htWt: '6-3 295', school: 'Coahoma CC', stats: '' },
+            { number: '55', name: 'Eric Sadler', position: 'RUSH3', htWt: '6-3 250', school: 'NE Oklahoma A&M',
                 stats: '5 tackles' },
         ];
 
-        const SAMPLE_B = [
-            { number: '7', name: 'D\'Arthur Cowan', position: 'WR1', htWt: '6-3 185', school: 'Olive Branch HS',
-                stats: '' },
-            { number: '74', name: 'Jared Machoro', position: 'LT', htWt: '6-7 280', school: 'Coldspring-Oakhurst HS',
-                stats: '' },
-            { number: '76', name: 'Jason Osei', position: 'LG', htWt: '6-5 300', school: 'Baylor', stats: 'All-LSC 2nd' },
-            { number: '56', name: 'John Aguilar', position: 'C', htWt: '6-1 285', school: 'Roosevelt HS', stats: '' },
-            { number: '63', name: 'Avery Poates', position: 'RG', htWt: '6-5 300', school: 'Nevada', stats: 'All-LSC HM' },
-            { number: '79', name: 'Poet Thomas', position: 'RT', htWt: '6-6 325', school: 'Texas Tech', stats: '' },
+        const SAMPLE_B_7 = [
             { number: '12', name: 'Luis Perez', position: 'QB', htWt: '6-3 220', school: 'Otay Ranch HS', stats: '' },
-            { number: '23', name: 'Richard Cooper', position: 'HB', htWt: '5-9 195', school: 'Angleton HS',
-                stats: '1331yds 7TD' },
-            { number: '26', name: 'Chris Chumley', position: 'TE', htWt: '6-4 250', school: 'Kilgore College',
+            { number: '56', name: 'John Aguilar', position: 'C', htWt: '6-1 285', school: 'Roosevelt HS', stats: '' },
+            { number: '7', name: 'D\'Arthur Cowan', position: 'X', htWt: '6-3 185', school: 'Olive Branch HS', stats: '' },
+            { number: '10', name: 'Darby Smith', position: 'Z', htWt: '5-10 180', school: 'Ennis HS', stats: '868yds 8TD' },
+            { number: '86', name: 'Justice Luce', position: 'Y', htWt: '6-1 200', school: 'Lovejoy HS',
+                stats: '4rec 42yds' },
+            { number: '26', name: 'Chris Chumley', position: 'H', htWt: '6-4 250', school: 'Kilgore College',
                 stats: '15rec 157yds' },
-            { number: '10', name: 'Darby Smith', position: 'WR2', htWt: '5-10 180', school: 'Ennis HS',
-                stats: '868yds 8TD' },
-            { number: '4', name: 'Buck Wilson', position: 'FB', htWt: '5-11 185', school: 'Commerce HS',
-                stats: '29.8 ypkr' },
-            { number: '15', name: 'Erin Brown', position: 'DE1', htWt: '6-3 255', school: 'Hinds CC',
-                stats: 'Preseason All-GSC' },
-            { number: '54', name: 'J\'Terian Wren', position: 'DT1', htWt: '6-0 262', school: 'Broadstreet HS',
-                stats: '1.5 sacks' },
-            { number: '53', name: 'D\'Quin Andrews', position: 'DT2', htWt: '6-3 295', school: 'Coahoma CC', stats: '' },
-            { number: '55', name: 'Eric Sadler', position: 'DE2', htWt: '6-3 250', school: 'NE Oklahoma A&M',
-                stats: '1.5 sacks' },
-            { number: '98', name: 'Cole Baker', position: 'DE2', htWt: '6-3 245', school: 'Clay-Chalkville HS',
-                stats: '1.5 sacks' },
-            { number: '30', name: 'Daniel Johnson', position: 'LB1', htWt: '6-1 225', school: 'Itawamba CC', stats: '' },
-            { number: '29', name: 'CJ Johnson', position: 'LB2', htWt: '6-2 220', school: 'SW Mississippi CC', stats: '' },
-            { number: '7', name: 'Reco Beckwith', position: 'LB3', htWt: '6-0 205', school: 'Winnsboro HS',
-                stats: '148 tackles' },
-            { number: '38', name: 'Chris Pickett', position: 'CB1', htWt: '6-0 170', school: 'Choctawhatchee HS',
-                stats: '' },
-            { number: '3', name: 'Romelo Wilson', position: 'CB2', htWt: '5-11 170', school: 'Campbell HS',
+            { number: '23', name: 'Richard Cooper', position: 'RB', htWt: '5-9 195', school: 'Angleton HS',
+                stats: '1331yds 7TD' },
+            { number: '3', name: 'Romelo Wilson', position: 'CB1', htWt: '5-11 170', school: 'Campbell HS',
                 stats: '8 INTs' },
+            { number: '38', name: 'Chris Pickett', position: 'CB2', htWt: '6-0 170', school: 'Choctawhatchee HS',
+                stats: '' },
             { number: '27', name: 'Tyrell Brown', position: 'S1', htWt: '5-11 190', school: 'Appalachian State',
                 stats: '' },
             { number: '13', name: 'De\'Quan Reddick', position: 'S2', htWt: '6-0 205', school: 'New Mexico Military CC',
                 stats: '' },
-            { number: '12', name: 'Ken Hike Jr.', position: 'CB2', htWt: '6-1 170', school: 'Tuskegee', stats: '' },
-            { number: '5', name: 'Keith Flanigan', position: 'S1', htWt: '6-0 200', school: 'Tennessee Tech',
-                stats: '5 tackles' },
+            { number: '54', name: 'J\'Terian Wren', position: 'RUSH1', htWt: '6-0 262', school: 'Broadstreet HS',
+                stats: '1.5 sacks' },
+            { number: '98', name: 'Cole Baker', position: 'RUSH2', htWt: '6-3 245', school: 'Clay-Chalkville HS',
+                stats: '1.5 sacks' },
+            { number: '90', name: 'Demarcus Glover', position: 'RUSH3', htWt: '6-4 270', school: 'Western Kentucky',
+                stats: '' },
         ];
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // AUTO-ASSIGN
+        // AUTO-ASSIGN (7‑on‑7)
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         function autoAssignTeam(teamKey) {
             const team = state[teamKey];
-            OFFENSE_SLOTS.forEach(s => team.offense[s] = null);
-            DEFENSE_SLOTS.forEach(s => team.defense[s] = null);
+            OFFENSE_SLOTS_7.forEach(s => team.offense[s] = null);
+            DEFENSE_SLOTS_7.forEach(s => team.defense[s] = null);
             team.backups = { offense: {}, defense: {} };
-            OFFENSE_SLOTS.forEach(s => team.backups.offense[s] = []);
-            DEFENSE_SLOTS.forEach(s => team.backups.defense[s] = []);
+            OFFENSE_SLOTS_7.forEach(s => team.backups.offense[s] = []);
+            DEFENSE_SLOTS_7.forEach(s => team.backups.defense[s] = []);
 
             const assigned = new Set();
 
             team.players.forEach(p => {
                 const pos = p.position ? p.position.toUpperCase().trim() : '';
-                const slot = POS_MAP[pos] || null;
+                const slot = POS_MAP_7[pos] || null;
                 if (slot) {
-                    if (OFFENSE_SLOTS.includes(slot) && !team.offense[slot]) {
+                    if (OFFENSE_SLOTS_7.includes(slot) && !team.offense[slot]) {
                         team.offense[slot] = p.id;
                         assigned.add(p.id);
-                    } else if (DEFENSE_SLOTS.includes(slot) && !team.defense[slot]) {
+                    } else if (DEFENSE_SLOTS_7.includes(slot) && !team.defense[slot]) {
                         team.defense[slot] = p.id;
                         assigned.add(p.id);
                     }
@@ -1199,12 +1131,12 @@
             team.players.forEach(p => {
                 if (assigned.has(p.id)) return;
                 const pos = p.position ? p.position.toUpperCase().trim() : '';
-                const slot = POS_MAP[pos] || null;
+                const slot = POS_MAP_7[pos] || null;
                 if (slot) {
-                    if (OFFENSE_SLOTS.includes(slot)) {
+                    if (OFFENSE_SLOTS_7.includes(slot)) {
                         team.backups.offense[slot].push(p.id);
                         assigned.add(p.id);
-                    } else if (DEFENSE_SLOTS.includes(slot)) {
+                    } else if (DEFENSE_SLOTS_7.includes(slot)) {
                         team.backups.defense[slot].push(p.id);
                         assigned.add(p.id);
                     }
@@ -1254,9 +1186,7 @@
                 let school = parts[4] || '';
                 let stats = parts.slice(5).join(' ') || '';
 
-                const posKeywords = ['QB', 'HB', 'RB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'DE', 'DT', 'LB', 'CB',
-                    'S', 'SAF', 'FS', 'SS'
-                ];
+                const posKeywords = ['QB', 'C', 'X', 'Z', 'Y', 'H', 'RB', 'CB', 'S', 'RUSH'];
                 let found = posKeywords.some(k => position.toUpperCase().includes(k));
                 if (!found && parts.length >= 4) {
                     const test = parts[2] || '';
@@ -1310,15 +1240,15 @@
             if (!teamKey) return;
             const team = state[teamKey];
             team.players = team.players.filter(p => p.id !== id);
-            OFFENSE_SLOTS.forEach(s => { if (team.offense[s] === id) team.offense[s] = null; });
-            DEFENSE_SLOTS.forEach(s => { if (team.defense[s] === id) team.defense[s] = null; });
+            OFFENSE_SLOTS_7.forEach(s => { if (team.offense[s] === id) team.offense[s] = null; });
+            DEFENSE_SLOTS_7.forEach(s => { if (team.defense[s] === id) team.defense[s] = null; });
             if (team.backups) {
-                OFFENSE_SLOTS.forEach(s => {
+                OFFENSE_SLOTS_7.forEach(s => {
                     if (team.backups.offense && team.backups.offense[s]) {
                         team.backups.offense[s] = team.backups.offense[s].filter(pid => pid !== id);
                     }
                 });
-                DEFENSE_SLOTS.forEach(s => {
+                DEFENSE_SLOTS_7.forEach(s => {
                     if (team.backups.defense && team.backups.defense[s]) {
                         team.backups.defense[s] = team.backups.defense[s].filter(pid => pid !== id);
                     }
@@ -1364,7 +1294,7 @@
                 if (!list) return;
 
                 const assignedIds = new Set();
-                const allSlots = [...OFFENSE_SLOTS, ...DEFENSE_SLOTS];
+                const allSlots = [...OFFENSE_SLOTS_7, ...DEFENSE_SLOTS_7];
                 allSlots.forEach(s => {
                     if (team.offense[s]) assignedIds.add(team.offense[s]);
                     if (team.defense[s]) assignedIds.add(team.defense[s]);
@@ -1415,7 +1345,7 @@
         }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // CHART RENDER (11v11)
+        // CHART RENDER (7v7)
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         function renderChart() {
             const container = document.getElementById('chartContainer');
@@ -1434,10 +1364,10 @@
             const leftTeam = state[leftKey];
             const rightTeam = state[rightKey];
 
-            const leftSlots = leftSide === 'offense' ? OFFENSE_SLOTS : DEFENSE_SLOTS;
-            const rightSlots = rightSide === 'offense' ? OFFENSE_SLOTS : DEFENSE_SLOTS;
-            const leftLabel = leftSide === 'offense' ? 'OFFENSE' : 'DEFENSE (4-3)';
-            const rightLabel = rightSide === 'offense' ? 'OFFENSE' : 'DEFENSE (4-3)';
+            const leftSlots = leftSide === 'offense' ? OFFENSE_SLOTS_7 : DEFENSE_SLOTS_7;
+            const rightSlots = rightSide === 'offense' ? OFFENSE_SLOTS_7 : DEFENSE_SLOTS_7;
+            const leftLabel = leftSide === 'offense' ? 'OFFENSE' : 'DEFENSE (7v7)';
+            const rightLabel = rightSide === 'offense' ? 'OFFENSE' : 'DEFENSE (7v7)';
 
             return `
                 <div class="chart-page">
@@ -1481,14 +1411,11 @@
 
             let rows = [];
             if (isOffense) {
-                rows.push(['WR1', 'WR2']);
-                rows.push(['QB', 'HB', 'FB']);
-                rows.push(['LT', 'LG', 'C', 'RG', 'RT']);
+                rows.push(['QB', 'C', 'RB']);
+                rows.push(['X', 'Z', 'Y', 'H']);
             } else {
-                rows.push(['DE1', 'DE2', 'DT1', 'DT2']);
-                rows.push(['LB1', 'LB2', 'LB3']);
-                rows.push(['CB1', 'CB2']);
-                rows.push(['S1', 'S2']);
+                rows.push(['RUSH1', 'RUSH2', 'RUSH3']);
+                rows.push(['CB1', 'CB2', 'S1', 'S2']);
             }
 
             const rowClass = isOffense ? 'offense-row-' : 'defense-row-';
@@ -1636,12 +1563,11 @@
             if (!confirm(`Clear all players for ${state[teamKey].name || teamKey}?`)) return;
             const team = state[teamKey];
             team.players = [];
-            OFFENSE_SLOTS.forEach(s => team.offense[s] = null);
-            DEFENSE_SLOTS.forEach(s => team.defense[s] = null);
+            OFFENSE_SLOTS_7.forEach(s => team.offense[s] = null);
+            DEFENSE_SLOTS_7.forEach(s => team.defense[s] = null);
             team.backups = { offense: {}, defense: {} };
-            OFFENSE_SLOTS.forEach(s => team.backups.offense[s] = []);
-            DEFENSE_SLOTS.forEach(s => team.backups.defense[s] = []);
-            // Keep info fields unchanged.
+            OFFENSE_SLOTS_7.forEach(s => team.backups.offense[s] = []);
+            DEFENSE_SLOTS_7.forEach(s => team.backups.defense[s] = []);
             renderAll();
             saveData();
             const status = document.getElementById(teamKey + 'actionStatus');
@@ -1651,7 +1577,7 @@
         function saveTeam(teamKey) {
             const team = state[teamKey];
             try {
-                localStorage.setItem(teamKey + '_saved', JSON.stringify(team));
+                localStorage.setItem(teamKey + '_saved_7', JSON.stringify(team));
                 const status = document.getElementById(teamKey + 'actionStatus');
                 if (status) { status.textContent = '✅ Team saved.'; }
             } catch (e) {
@@ -1660,7 +1586,7 @@
         }
 
         function loadTeam(teamKey) {
-            const saved = localStorage.getItem(teamKey + '_saved');
+            const saved = localStorage.getItem(teamKey + '_saved_7');
             if (!saved) {
                 const status = document.getElementById(teamKey + 'actionStatus');
                 if (status) { status.textContent = '❌ No saved data for this team.'; }
@@ -1668,7 +1594,6 @@
             }
             try {
                 const data = JSON.parse(saved);
-                // Overwrite only that team's properties
                 const team = state[teamKey];
                 Object.keys(data).forEach(key => {
                     if (key === 'players' || key === 'offense' || key === 'defense' || key === 'backups') {
@@ -1677,14 +1602,13 @@
                         team[key] = data[key];
                     }
                 });
-                // Ensure backup structures
                 if (!team.backups) team.backups = { offense: {}, defense: {} };
                 if (!team.backups.offense) team.backups.offense = {};
                 if (!team.backups.defense) team.backups.defense = {};
-                OFFENSE_SLOTS.forEach(s => { if (!(s in team.offense)) team.offense[s] = null; });
-                DEFENSE_SLOTS.forEach(s => { if (!(s in team.defense)) team.defense[s] = null; });
-                OFFENSE_SLOTS.forEach(s => { if (!team.backups.offense[s]) team.backups.offense[s] = []; });
-                DEFENSE_SLOTS.forEach(s => { if (!team.backups.defense[s]) team.backups.defense[s] = []; });
+                OFFENSE_SLOTS_7.forEach(s => { if (!(s in team.offense)) team.offense[s] = null; });
+                DEFENSE_SLOTS_7.forEach(s => { if (!(s in team.defense)) team.defense[s] = null; });
+                OFFENSE_SLOTS_7.forEach(s => { if (!team.backups.offense[s]) team.backups.offense[s] = []; });
+                DEFENSE_SLOTS_7.forEach(s => { if (!team.backups.defense[s]) team.backups.defense[s] = []; });
 
                 renderAll();
                 saveData();
@@ -1735,8 +1659,7 @@
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         function saveData() {
             try {
-                localStorage.setItem('fbChartData11', JSON.stringify(state));
-                // Also save individual teams for quick load
+                localStorage.setItem('fbChartData7', JSON.stringify(state));
                 saveTeam('teamA');
                 saveTeam('teamB');
             } catch (e) {
@@ -1745,7 +1668,7 @@
         }
 
         function loadData() {
-            const saved = localStorage.getItem('fbChartData11');
+            const saved = localStorage.getItem('fbChartData7');
             if (!saved) { alert('No saved data found.'); return; }
             try {
                 const parsed = JSON.parse(saved);
@@ -1755,8 +1678,8 @@
                     if (!t.backups) t.backups = { offense: {}, defense: {} };
                     if (!t.backups.offense) t.backups.offense = {};
                     if (!t.backups.defense) t.backups.defense = {};
-                    OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
-                    DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
+                    OFFENSE_SLOTS_7.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
+                    DEFENSE_SLOTS_7.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
                     if (!t.players) t.players = [];
                     state[tk] = t;
                 });
@@ -1770,26 +1693,26 @@
 
         function clearAllData() {
             if (!confirm('⚠️ Clear all data? This cannot be undone.')) return;
-            localStorage.removeItem('fbChartData11');
-            localStorage.removeItem('teamA_saved');
-            localStorage.removeItem('teamB_saved');
+            localStorage.removeItem('fbChartData7');
+            localStorage.removeItem('teamA_saved_7');
+            localStorage.removeItem('teamB_saved_7');
             state.teamA.players = [];
             state.teamB.players = [];
-            OFFENSE_SLOTS.forEach(s => { state.teamA.offense[s] = null;
+            OFFENSE_SLOTS_7.forEach(s => { state.teamA.offense[s] = null;
                 state.teamB.offense[s] = null; });
-            DEFENSE_SLOTS.forEach(s => { state.teamA.defense[s] = null;
+            DEFENSE_SLOTS_7.forEach(s => { state.teamA.defense[s] = null;
                 state.teamB.defense[s] = null; });
-            OFFENSE_SLOTS.forEach(s => { state.teamA.backups.offense[s] = [];
+            OFFENSE_SLOTS_7.forEach(s => { state.teamA.backups.offense[s] = [];
                 state.teamB.backups.offense[s] = []; });
-            DEFENSE_SLOTS.forEach(s => { state.teamA.backups.defense[s] = [];
+            DEFENSE_SLOTS_7.forEach(s => { state.teamA.backups.defense[s] = [];
                 state.teamB.backups.defense[s] = []; });
             document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
             renderAll();
         }
 
         function seedSampleData() {
-            state.teamA.players = SAMPLE_A.map(p => ({ ...p, id: genId() }));
-            state.teamB.players = SAMPLE_B.map(p => ({ ...p, id: genId() }));
+            state.teamA.players = SAMPLE_A_7.map(p => ({ ...p, id: genId() }));
+            state.teamB.players = SAMPLE_B_7.map(p => ({ ...p, id: genId() }));
             autoAssignAll();
             document.getElementById('teamAName').value = 'Texas A&M-Commerce';
             document.getElementById('teamAColor').value = '#1F4E78';
@@ -1811,14 +1734,14 @@
 
             renderAll();
             saveData();
-            alert('🌱 Sample data loaded!');
+            alert('🌱 Sample 7‑on‑7 data loaded!');
         }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // INIT
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         function init() {
-            const saved = localStorage.getItem('fbChartData11');
+            const saved = localStorage.getItem('fbChartData7');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -1828,8 +1751,8 @@
                         if (!t.backups) t.backups = { offense: {}, defense: {} };
                         if (!t.backups.offense) t.backups.offense = {};
                         if (!t.backups.defense) t.backups.defense = {};
-                        OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
-                        DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
+                        OFFENSE_SLOTS_7.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
+                        DEFENSE_SLOTS_7.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
                         if (!t.players) t.players = [];
                         state[tk] = t;
                     });
@@ -1839,16 +1762,15 @@
                 return;
             }
 
-            // Ensure all slots exist
             ['teamA', 'teamB'].forEach(tk => {
                 const t = state[tk];
                 if (!t.backups) t.backups = { offense: {}, defense: {} };
                 if (!t.backups.offense) t.backups.offense = {};
                 if (!t.backups.defense) t.backups.defense = {};
-                OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
-                DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
-                OFFENSE_SLOTS.forEach(s => { if (!t.backups.offense[s]) t.backups.offense[s] = []; });
-                DEFENSE_SLOTS.forEach(s => { if (!t.backups.defense[s]) t.backups.defense[s] = []; });
+                OFFENSE_SLOTS_7.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
+                DEFENSE_SLOTS_7.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
+                OFFENSE_SLOTS_7.forEach(s => { if (!t.backups.offense[s]) t.backups.offense[s] = []; });
+                DEFENSE_SLOTS_7.forEach(s => { if (!t.backups.defense[s]) t.backups.defense[s] = []; });
                 if (!t.players) t.players = [];
             });
 
