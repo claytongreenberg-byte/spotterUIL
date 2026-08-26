@@ -1027,4 +1027,521 @@
 
         function initState() {
             ['teamA', 'teamB'].forEach(tk => {
-                const t = state
+                const t = state[tk];
+                t.offense = {};
+                t.defense = {};
+                t.backups = { offense: {}, defense: {} };
+                OFFENSE_SLOTS.forEach(s => t.offense[s] = null);
+                DEFENSE_SLOTS.forEach(s => t.defense[s] = null);
+                OFFENSE_SLOTS.forEach(s => t.backups.offense[s] = []);
+                DEFENSE_SLOTS.forEach(s => t.backups.defense[s] = []);
+                t.players = [];
+            });
+            renderAll();
+        }
+
+        function autoAssignTeam(teamKey) {
+            const team = state[teamKey];
+            OFFENSE_SLOTS.forEach(s => team.offense[s] = null);
+            DEFENSE_SLOTS.forEach(s => team.defense[s] = null);
+            team.backups = { offense: {}, defense: {} };
+            OFFENSE_SLOTS.forEach(s => team.backups.offense[s] = []);
+            DEFENSE_SLOTS.forEach(s => team.backups.defense[s] = []);
+            const assigned = new Set();
+            team.players.forEach(p => {
+                const pos = p.position ? p.position.toUpperCase().trim() : '';
+                const slot = POS_MAP[pos] || null;
+                if (slot) {
+                    if (OFFENSE_SLOTS.includes(slot) && !team.offense[slot]) {
+                        team.offense[slot] = p.id;
+                        assigned.add(p.id);
+                    } else if (DEFENSE_SLOTS.includes(slot) && !team.defense[slot]) {
+                        team.defense[slot] = p.id;
+                        assigned.add(p.id);
+                    }
+                }
+            });
+            team.players.forEach(p => {
+                if (assigned.has(p.id)) return;
+                const pos = p.position ? p.position.toUpperCase().trim() : '';
+                const slot = POS_MAP[pos] || null;
+                if (slot) {
+                    if (OFFENSE_SLOTS.includes(slot)) {
+                        team.backups.offense[slot].push(p.id);
+                        assigned.add(p.id);
+                    } else if (DEFENSE_SLOTS.includes(slot)) {
+                        team.backups.defense[slot].push(p.id);
+                        assigned.add(p.id);
+                    }
+                }
+            });
+        }
+
+        function parseRoster(team) {
+            const prefix = team === 'A' ? 'teamA' : 'teamB';
+            const input = document.getElementById(prefix + 'RosterInput');
+            const status = document.getElementById(prefix + 'Status');
+            const text = input.value.trim();
+            if (!text) {
+                status.textContent = '⚠️ Please paste roster data first.';
+                status.className = 'import-status error';
+                return;
+            }
+            const lines = text.split('\n').filter(l => l.trim());
+            const parsed = [];
+            lines.forEach(line => {
+                let parts = [];
+                if (line.includes('|')) parts = line.split('|').map(s => s.trim());
+                else if (line.includes('\t')) parts = line.split('\t').map(s => s.trim());
+                else if (line.includes(',')) parts = line.split(',').map(s => s.trim());
+                else {
+                    parts = line.split(/\s{2,}/).map(s => s.trim());
+                    if (parts.length < 2) parts = line.split(/\s+/).map(s => s.trim());
+                }
+                if (parts.length < 2) return;
+                let number = parts[0].replace(/^#/, '').replace(/\.$/, '').trim() || '?';
+                let name = parts[1] || 'Unknown';
+                let position = parts[2] || '';
+                let htWt = parts[3] || '';
+                let school = parts[4] || '';
+                let stats = parts.slice(5).join(' ') || '';
+                const posKeywords = ['QB', 'HB', 'RB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'DE', 'DT', 'LB', 'CB', 'S', 'SAF', 'FS', 'SS'];
+                let found = posKeywords.some(k => position.toUpperCase().includes(k));
+                if (!found && parts.length >= 4) {
+                    const test = parts[2] || '';
+                    if (test.length <= 4 && test.toUpperCase() !== test) {
+                        const temp = parts[3] || '';
+                        if (posKeywords.some(k => temp.toUpperCase().includes(k))) {
+                            position = temp;
+                            htWt = parts[4] || '';
+                            school = parts[5] || '';
+                            stats = parts.slice(6).join(' ') || '';
+                        }
+                    }
+                }
+                const player = { number: number || '?', name: name || 'Unknown', position: position || '', htWt: htWt || '', school: school || '', stats: stats || '', id: genId() };
+                parsed.push(player);
+            });
+            if (parsed.length === 0) {
+                status.textContent = '⚠️ No valid players found. Check format.';
+                status.className = 'import-status error';
+                return;
+            }
+            const teamState = state[prefix];
+            parsed.forEach(p => {
+                const exists = teamState.players.some(ex => ex.number === p.number && ex.name === p.name);
+                if (!exists) teamState.players.push(p);
+            });
+            autoAssignTeam(prefix);
+            status.textContent = `✅ Imported ${parsed.length} players (${teamState.players.length} total).`;
+            status.className = 'import-status';
+            input.value = '';
+            renderAll();
+            saveData();
+        }
+
+        function removePlayer(id, teamKey) {
+            if (!teamKey) return;
+            const team = state[teamKey];
+            team.players = team.players.filter(p => p.id !== id);
+            OFFENSE_SLOTS.forEach(s => { if (team.offense[s] === id) team.offense[s] = null; });
+            DEFENSE_SLOTS.forEach(s => { if (team.defense[s] === id) team.defense[s] = null; });
+            if (team.backups) {
+                OFFENSE_SLOTS.forEach(s => { if (team.backups.offense && team.backups.offense[s]) { team.backups.offense[s] = team.backups.offense[s].filter(pid => pid !== id); } });
+                DEFENSE_SLOTS.forEach(s => { if (team.backups.defense && team.backups.defense[s]) { team.backups.defense[s] = team.backups.defense[s].filter(pid => pid !== id); } });
+            }
+            renderAll();
+            saveData();
+        }
+
+        function renderAll() {
+            renderTeamInputs();
+            renderBenches();
+            renderChart();
+        }
+
+        function renderTeamInputs() {
+            ['A', 'B'].forEach(t => {
+                const prefix = t === 'A' ? 'teamA' : 'teamB';
+                const team = state[prefix];
+                document.getElementById(prefix + 'Name').value = team.name || '';
+                document.getElementById(prefix + 'Color').value = team.color || '#1F4E78';
+                document.getElementById(prefix + 'Coach').value = team.coach || '';
+                document.getElementById(prefix + 'Record').value = team.record || '';
+                document.getElementById(prefix + 'Division').value = team.division || '';
+                document.getElementById(prefix + 'Schedule').value = team.schedule || '';
+                document.getElementById(prefix + 'Scores').value = team.scores || '';
+                document.getElementById(prefix + 'Matchups').value = team.matchups || '';
+                document.getElementById(prefix + 'Dot').style.background = team.color || '#1F4E78';
+                const label = document.getElementById(prefix + 'ColorLabel');
+                if (label) { 
+                    label.style.background = team.color || '#1F4E78';
+                    label.textContent = team.name || (t === 'A' ? 'Away' : 'Home');
+                }
+            });
+        }
+
+        function renderBenches() {
+            ['A', 'B'].forEach(t => {
+                const prefix = t === 'A' ? 'teamA' : 'teamB';
+                const team = state[prefix];
+                const list = document.getElementById(prefix + 'BenchList');
+                if (!list) return;
+                const assignedIds = new Set();
+                const allSlots = [...OFFENSE_SLOTS, ...DEFENSE_SLOTS];
+                allSlots.forEach(s => {
+                    if (team.offense[s]) assignedIds.add(team.offense[s]);
+                    if (team.defense[s]) assignedIds.add(team.defense[s]);
+                    if (team.backups && team.backups.offense && team.backups.offense[s]) {
+                        team.backups.offense[s].forEach(id => assignedIds.add(id));
+                    }
+                    if (team.backups && team.backups.defense && team.backups.defense[s]) {
+                        team.backups.defense[s].forEach(id => assignedIds.add(id));
+                    }
+                });
+                const unassigned = team.players.filter(p => !assignedIds.has(p.id));
+                list.innerHTML = '';
+                if (unassigned.length === 0) {
+                    const empty = document.createElement('span');
+                    empty.className = 'bench-empty';
+                    empty.textContent = 'No unassigned players';
+                    list.appendChild(empty);
+                } else {
+                    unassigned.forEach(p => {
+                        const tag = document.createElement('span');
+                        tag.className = 'player-tag';
+                        const num = document.createElement('span');
+                        num.className = 'num';
+                        num.style.background = team.color || '#1F4E78';
+                        num.textContent = p.number || '?';
+                        tag.appendChild(num);
+                        const nameSpan = document.createElement('span');
+                        nameSpan.textContent = p.name || 'Unknown';
+                        tag.appendChild(nameSpan);
+                        const posSpan = document.createElement('span');
+                        posSpan.style.cssText = 'font-size:10px;color:#888;';
+                        posSpan.textContent = p.position || '';
+                        tag.appendChild(posSpan);
+                        const del = document.createElement('span');
+                        del.className = 'del';
+                        del.textContent = '×';
+                        del.title = 'Remove player';
+                        del.onclick = (e) => { e.stopPropagation(); removePlayer(p.id, prefix); };
+                        tag.appendChild(del);
+                        list.appendChild(tag);
+                    });
+                }
+            });
+        }
+
+        function renderChart() {
+            const container = document.getElementById('chartContainer');
+            const html = generateChartHTML();
+            container.innerHTML = html;
+        }
+
+        function generateChartHTML() {
+            const p1 = generatePage('teamA', 'offense', 'teamB', 'defense', 1);
+            const p2 = generatePage('teamA', 'defense', 'teamB', 'offense', 2);
+            const roster = generateRosterHTML();
+            return p1 + p2 + roster;
+        }
+
+        function generatePage(leftKey, leftSide, rightKey, rightSide, pageNum) {
+            const leftTeam = state[leftKey];
+            const rightTeam = state[rightKey];
+            const leftSlots = leftSide === 'offense' ? OFFENSE_SLOTS : DEFENSE_SLOTS;
+            const rightSlots = rightSide === 'offense' ? OFFENSE_SLOTS : DEFENSE_SLOTS;
+            const leftLabel = leftSide === 'offense' ? 'OFFENSE' : 'DEFENSE (4-3)';
+            const rightLabel = rightSide === 'offense' ? 'OFFENSE' : 'DEFENSE (4-3)';
+            return `
+                <div class="chart-page">
+                    <div class="team-section">
+                        ${teamInfoHTML(leftTeam)}
+                        <div class="formation-header" style="background:${leftTeam.color || '#1F4E78'};">${leftLabel}</div>
+                        ${formationHTML(leftTeam, leftSlots, leftSide)}
+                    </div>
+                    <div class="team-section">
+                        ${teamInfoHTML(rightTeam)}
+                        <div class="formation-header" style="background:${rightTeam.color || '#2d8659'};">${rightLabel}</div>
+                        ${formationHTML(rightTeam, rightSlots, rightSide)}
+                    </div>
+                </div>
+            `;
+        }
+
+        function teamInfoHTML(team) {
+            const schedule = team.schedule ? `<div class="info-block"><strong>Schedule:</strong> ${team.schedule.replace(/\n/g, '<br>')}</div>` : '';
+            const scores = team.scores ? `<div class="info-block"><strong>Scores:</strong> ${team.scores.replace(/\n/g, '<br>')}</div>` : '';
+            const matchups = team.matchups ? `<div class="info-block"><strong>Matchups:</strong> ${team.matchups.replace(/\n/g, '<br>')}</div>` : '';
+            return `
+                <div class="team-info" style="background:${team.color || '#1F4E78'};">
+                    <div class="team-name">${team.name || 'Team'}</div>
+                    <div class="info-row"><span class="info-label">Record:</span> <span class="info-value">${team.record || ''}</span></div>
+                    <div class="info-row"><span class="info-label">UIL Division:</span> <span class="info-value">${team.division || ''}</span></div>
+                    <div class="info-row"><span class="info-label">Coach:</span> <span class="info-value">${team.coach || ''}</span></div>
+                    ${schedule}${scores}${matchups}
+                </div>
+            `;
+        }
+
+        function formationHTML(team, slots, side) {
+            const isOffense = side === 'offense';
+            let rows = [];
+            if (isOffense) {
+                rows.push(['WR1', 'WR2']);
+                rows.push(['QB', 'HB', 'FB']);
+                rows.push(['LT', 'LG', 'C', 'RG', 'RT']);
+            } else {
+                rows.push(['DE1', 'DE2', 'DT1', 'DT2']);
+                rows.push(['LB1', 'LB2', 'LB3']);
+                rows.push(['CB1', 'CB2']);
+                rows.push(['S1', 'S2']);
+            }
+            const rowClass = isOffense ? 'offense-row-' : 'defense-row-';
+            let html = '<div class="formation-grid">';
+            rows.forEach((rowSlots, idx) => {
+                const cls = rowClass + (idx + 1);
+                html += `<div class="${cls}">`;
+                rowSlots.forEach(slot => {
+                    let starterId = null;
+                    if (isOffense) { starterId = team.offense[slot] || null; } else { starterId = team.defense[slot] || null; }
+                    const starter = starterId ? team.players.find(p => p.id === starterId) : null;
+                    let backupIds = [];
+                    if (team.backups) {
+                        const bk = isOffense ? team.backups.offense : team.backups.defense;
+                        if (bk && bk[slot]) backupIds = bk[slot] || [];
+                    }
+                    const backups = backupIds.map(id => team.players.find(p => p.id === id)).filter(Boolean);
+                    html += `<div class="pos-row">`;
+                    html += `<span class="pos-label">${slot}</span>`;
+                    html += `<div class="slot-wrap">`;
+                    if (starter) {
+                        html += renderPlayerSlot(starter, team.color, false);
+                    } else {
+                        html += `<div class="player-slot empty-slot">—</div>`;
+                    }
+                    backups.slice(0, 2).forEach(bp => {
+                        html += renderPlayerSlot(bp, team.color, true);
+                    });
+                    html += `</div></div>`;
+                });
+                html += `</div>`;
+            });
+            html += '</div>';
+            return html;
+        }
+
+        function renderPlayerSlot(player, color, isBackup) {
+            const cls = isBackup ? 'player-slot backup-slot' : 'player-slot filled';
+            const numCls = 'jersey';
+            const nameCls = 'pname';
+            const infoCls = 'pinfo';
+            let infoParts = [];
+            if (player.htWt) infoParts.push(player.htWt);
+            if (player.school) infoParts.push(player.school);
+            if (player.stats) infoParts.push(player.stats);
+            const infoStr = infoParts.join(' • ');
+            const backupLabel = isBackup ? `<div class="pbackup">BACKUP</div>` : '';
+            return `
+                <div class="${cls}">
+                    <div class="${numCls}" style="background:${isBackup ? '#8899aa' : (color || '#1F4E78')};">${player.number || '?'}</div>
+                    <div class="${nameCls}">${player.name || 'Unknown'}</div>
+                    ${infoStr ? `<div class="${infoCls}">${infoStr}</div>` : ''}
+                    ${backupLabel}
+                </div>
+            `;
+        }
+
+        function generateRosterHTML() {
+            const allPlayers = [];
+            state.teamA.players.forEach(p => allPlayers.push({ ...p, team: state.teamA.name || 'Away', teamColor: state.teamA.color || '#1F4E78' }));
+            state.teamB.players.forEach(p => allPlayers.push({ ...p, team: state.teamB.name || 'Home', teamColor: state.teamB.color || '#2d8659' }));
+            allPlayers.sort((a, b) => {
+                const na = parseInt(a.number) || 0;
+                const nb = parseInt(b.number) || 0;
+                if (a.team !== b.team) return a.team.localeCompare(b.team);
+                return na - nb;
+            });
+            if (allPlayers.length === 0) {
+                return `<div class="roster-section"><div class="roster-title">📋 FULL ROSTER</div><div class="roster-empty">No roster data loaded. Import rosters above.</div></div>`;
+            }
+            let html = `<div class="roster-section"><div class="roster-title">📋 FULL ROSTER</div><div class="roster-table-wrap"><table class="roster-table"><thead><tr><th>#</th><th>Name</th><th>Position</th><th>Ht/Wt</th><th>School</th><th>Stats / Notes</th></tr></thead><tbody>`;
+            let currentTeam = '';
+            allPlayers.forEach(p => {
+                if (p.team !== currentTeam) {
+                    if (currentTeam !== '') { html += `<tr class="team-divider"><td colspan="6">${p.team}</td></tr>`; } else { html += `<tr class="team-divider"><td colspan="6">${p.team}</td></tr>`; }
+                    currentTeam = p.team;
+                }
+                const color = p.teamColor || '#1F4E78';
+                html += `<tr><td><strong style="color:${color};">${p.number || '?'}</strong></td><td>${p.name || ''}</td><td>${p.position || ''}</td><td>${p.htWt || ''}</td><td>${p.school || ''}</td><td>${p.stats || ''}</td></tr>`;
+            });
+            html += `</tbody></table></div></div>`;
+            return html;
+        }
+
+        function clearTeam(teamKey) {
+            if (!confirm(`Clear all players for ${state[teamKey].name || teamKey}?`)) return;
+            const team = state[teamKey];
+            team.players = [];
+            OFFENSE_SLOTS.forEach(s => team.offense[s] = null);
+            DEFENSE_SLOTS.forEach(s => team.defense[s] = null);
+            team.backups = { offense: {}, defense: {} };
+            OFFENSE_SLOTS.forEach(s => team.backups.offense[s] = []);
+            DEFENSE_SLOTS.forEach(s => team.backups.defense[s] = []);
+            renderAll();
+            saveData();
+            const status = document.getElementById(teamKey + 'actionStatus');
+            if (status) { status.textContent = '✅ Team cleared.'; }
+        }
+
+        function saveTeam(teamKey) {
+            const team = state[teamKey];
+            try {
+                localStorage.setItem(teamKey + '_saved_11', JSON.stringify(team));
+                const status = document.getElementById(teamKey + 'actionStatus');
+                if (status) { status.textContent = '✅ Team saved.'; }
+            } catch (e) { alert('Save failed: ' + e.message); }
+        }
+
+        function loadTeam(teamKey) {
+            const saved = localStorage.getItem(teamKey + '_saved_11');
+            if (!saved) {
+                const status = document.getElementById(teamKey + 'actionStatus');
+                if (status) { status.textContent = '❌ No saved data for this team.'; }
+                return;
+            }
+            try {
+                const data = JSON.parse(saved);
+                const team = state[teamKey];
+                Object.keys(data).forEach(key => { team[key] = data[key]; });
+                if (!team.backups) team.backups = { offense: {}, defense: {} };
+                if (!team.backups.offense) team.backups.offense = {};
+                if (!team.backups.defense) team.backups.defense = {};
+                OFFENSE_SLOTS.forEach(s => { if (!(s in team.offense)) team.offense[s] = null; });
+                DEFENSE_SLOTS.forEach(s => { if (!(s in team.defense)) team.defense[s] = null; });
+                OFFENSE_SLOTS.forEach(s => { if (!team.backups.offense[s]) team.backups.offense[s] = []; });
+                DEFENSE_SLOTS.forEach(s => { if (!team.backups.defense[s]) team.backups.defense[s] = []; });
+                renderAll();
+                saveData();
+                const status = document.getElementById(teamKey + 'actionStatus');
+                if (status) { status.textContent = '✅ Team loaded.'; }
+            } catch (e) { alert('Load failed: ' + e.message); }
+        }
+
+        function bindUI() {
+            ['A', 'B'].forEach(t => {
+                const prefix = t === 'A' ? 'teamA' : 'teamB';
+                const fields = ['Name', 'Color', 'Coach', 'Record', 'Division', 'Schedule', 'Scores', 'Matchups'];
+                fields.forEach(f => {
+                    const el = document.getElementById(prefix + f);
+                    if (!el) return;
+                    const key = f.toLowerCase();
+                    el.addEventListener('input', () => {
+                        state[prefix][key] = el.value;
+                        if (f === 'Color') {
+                            const label = document.getElementById(prefix + 'ColorLabel');
+                            if (label) { label.style.background = el.value; }
+                            document.getElementById(prefix + 'Dot').style.background = el.value;
+                        }
+                        renderAll();
+                        saveData();
+                    });
+                    if (f === 'Color') {
+                        el.addEventListener('change', () => {
+                            state[prefix].color = el.value;
+                            const label = document.getElementById(prefix + 'ColorLabel');
+                            if (label) { label.style.background = el.value; }
+                            document.getElementById(prefix + 'Dot').style.background = el.value;
+                            renderAll();
+                            saveData();
+                        });
+                    }
+                });
+            });
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('fbChartData11', JSON.stringify(state));
+                saveTeam('teamA');
+                saveTeam('teamB');
+            } catch (e) { alert('Save failed: ' + e.message); }
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('fbChartData11');
+            if (!saved) { alert('No saved data found.'); return; }
+            try {
+                const parsed = JSON.parse(saved);
+                ['teamA', 'teamB'].forEach(tk => {
+                    if (!parsed[tk]) return;
+                    const t = parsed[tk];
+                    if (!t.backups) t.backups = { offense: {}, defense: {} };
+                    if (!t.backups.offense) t.backups.offense = {};
+                    if (!t.backups.defense) t.backups.defense = {};
+                    OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
+                    DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
+                    if (!t.players) t.players = [];
+                    state[tk] = t;
+                });
+                renderAll();
+                saveData();
+                alert('✅ All data loaded successfully!');
+            } catch (e) { alert('❌ Failed to load data: ' + e.message); }
+        }
+
+        function clearAllData() {
+            if (!confirm('⚠️ Clear all data? This cannot be undone.')) return;
+            localStorage.removeItem('fbChartData11');
+            localStorage.removeItem('teamA_saved_11');
+            localStorage.removeItem('teamB_saved_11');
+            initState();
+        }
+
+        function init() {
+            const saved = localStorage.getItem('fbChartData11');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    ['teamA', 'teamB'].forEach(tk => {
+                        if (!parsed[tk]) return;
+                        const t = parsed[tk];
+                        if (!t.backups) t.backups = { offense: {}, defense: {} };
+                        if (!t.backups.offense) t.backups.offense = {};
+                        if (!t.backups.defense) t.backups.defense = {};
+                        OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
+                        DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
+                        if (!t.players) t.players = [];
+                        state[tk] = t;
+                    });
+                } catch (e) { console.warn('Load failed', e); initState(); }
+            } else {
+                initState();
+            }
+            ['teamA', 'teamB'].forEach(tk => {
+                const t = state[tk];
+                if (!t.backups) t.backups = { offense: {}, defense: {} };
+                if (!t.backups.offense) t.backups.offense = {};
+                if (!t.backups.defense) t.backups.defense = {};
+                OFFENSE_SLOTS.forEach(s => { if (!(s in t.offense)) t.offense[s] = null; });
+                DEFENSE_SLOTS.forEach(s => { if (!(s in t.defense)) t.defense[s] = null; });
+                OFFENSE_SLOTS.forEach(s => { if (!t.backups.offense[s]) t.backups.offense[s] = []; });
+                DEFENSE_SLOTS.forEach(s => { if (!t.backups.defense[s]) t.backups.defense[s] = []; });
+                if (!t.players) t.players = [];
+            });
+            bindUI();
+            renderAll();
+            ['A', 'B'].forEach(t => {
+                const prefix = t === 'A' ? 'teamA' : 'teamB';
+                const c = state[prefix].color || (t === 'A' ? '#1F4E78' : '#2d8659');
+                document.getElementById(prefix + 'Dot').style.background = c;
+                const label = document.getElementById(prefix + 'ColorLabel');
+                if (label) { label.style.background = c; label.textContent = state[prefix].name || (t === 'A' ? 'Away' : 'Home'); }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
