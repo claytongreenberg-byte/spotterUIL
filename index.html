@@ -386,8 +386,8 @@
         .chart-page {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 28px;
-            padding: 32px 36px;
+            gap: 20px;
+            padding: 24px 28px;
             page-break-after: always;
             page-break-inside: avoid;
         }
@@ -397,8 +397,8 @@
         @media (max-width: 800px) {
             .chart-page {
                 grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 20px;
+                gap: 16px;
+                padding: 16px;
             }
         }
         .team-section {
@@ -406,18 +406,18 @@
             flex-direction: column;
         }
         .team-info {
-            padding: 14px 16px;
+            padding: 12px 14px;
             border-radius: 6px;
             color: #fff;
-            margin-bottom: 14px;
-            font-size: 12px;
-            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 11px;
+            line-height: 1.5;
         }
         .team-info .team-name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 800;
             letter-spacing: 0.3px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         .team-info .info-row {
             display: flex;
@@ -432,40 +432,40 @@
             font-weight: 400;
         }
         .team-info .info-block {
-            margin-top: 4px;
+            margin-top: 3px;
         }
         .team-info .info-block strong {
             opacity: 0.9;
         }
         .formation-header {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             text-align: center;
-            padding: 8px 0;
+            padding: 6px 0;
             border-radius: 4px;
             color: #fff;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             letter-spacing: 0.5px;
         }
         .formation-grid {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
         .pos-row {
             display: flex;
-            gap: 5px;
+            gap: 4px;
             justify-content: center;
             align-items: stretch;
         }
         .pos-row .pos-label {
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 700;
-            color: #888;
+            color: #666;
             text-transform: uppercase;
             writing-mode: vertical-lr;
             letter-spacing: 0.5px;
-            width: 22px;
+            width: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -479,13 +479,14 @@
             gap: 4px;
             flex: 1;
             justify-content: center;
+            flex-wrap: wrap;
         }
         .player-slot {
-            width: 100px;
-            min-height: 70px;
+            width: 85px;
+            min-height: 60px;
             border: 2px solid #e0e4ea;
             border-radius: 4px;
-            padding: 4px 4px 3px 4px;
+            padding: 3px 3px 2px 3px;
             text-align: center;
             background: #fafbfc;
             display: flex;
@@ -493,28 +494,28 @@
             align-items: center;
             justify-content: center;
             transition: 0.05s;
-            flex: 1;
-            max-width: 120px;
+            flex: 1 1 70px;
+            max-width: 100px;
         }
         .player-slot.filled {
             border-color: #c8ced6;
             background: #fff;
         }
         .player-slot .jersey {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             color: #fff;
             padding: 0 4px;
             border-radius: 3px;
             line-height: 1.3;
-            min-width: 28px;
+            min-width: 24px;
             text-align: center;
             width: 100%;
         }
         .player-slot .pname {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
-            line-height: 1.2;
+            line-height: 1.1;
             margin-top: 1px;
             white-space: nowrap;
             overflow: hidden;
@@ -523,9 +524,9 @@
             padding: 0 2px;
         }
         .player-slot .pinfo {
-            font-size: 8px;
+            font-size: 7px;
             color: #888;
-            line-height: 1.2;
+            line-height: 1.1;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -533,93 +534,112 @@
             padding: 0 2px;
         }
         .player-slot .pbackup {
-            font-size: 7px;
+            font-size: 6px;
             font-weight: 600;
             color: #aaa;
             letter-spacing: 0.3px;
         }
         .player-slot.empty-slot {
             color: #ccc;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 300;
         }
         .player-slot.backup-slot {
             border-style: dashed;
             border-color: #d5dbe3;
             background: #f8f9fc;
-            min-height: 50px;
-            max-width: 80px;
+            min-height: 40px;
+            max-width: 70px;
+            flex: 1 1 55px;
         }
         .player-slot.backup-slot .jersey {
-            font-size: 16px;
-            min-width: 22px;
+            font-size: 14px;
+            min-width: 18px;
         }
         .player-slot.backup-slot .pname {
-            font-size: 8px;
-        }
-        .player-slot.backup-slot .pinfo {
             font-size: 7px;
         }
-        .offense-row-1 {
+        .player-slot.backup-slot .pinfo {
+            font-size: 6px;
+        }
+
+        /* ─── FIXED ROW LAYOUTS ─── */
+        .offense-row-1,
+        .defense-row-1 {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5px;
+            gap: 4px;
             justify-content: center;
         }
-        .offense-row-1 .pos-row {
-            justify-content: center;
+        .offense-row-1 {
+            grid-template-columns: 1fr 1fr;
         }
         .offense-row-2 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 5px;
-            justify-content: center;
-        }
-        .offense-row-2 .pos-row {
+            gap: 4px;
             justify-content: center;
         }
         .offense-row-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            gap: 5px;
-            justify-content: center;
-        }
-        .offense-row-3 .pos-row {
+            gap: 4px;
             justify-content: center;
         }
         .defense-row-1 {
-            display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 5px;
-            justify-content: center;
         }
         .defense-row-2 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 5px;
+            gap: 4px;
             justify-content: center;
-            max-width: 400px;
+            max-width: 340px;
             margin: 0 auto;
         }
         .defense-row-3 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 5px;
+            gap: 4px;
             justify-content: center;
-            max-width: 280px;
+            max-width: 200px;
             margin: 0 auto;
         }
+        .offense-row-1 .pos-row,
+        .offense-row-2 .pos-row,
+        .offense-row-3 .pos-row,
+        .defense-row-1 .pos-row,
+        .defense-row-2 .pos-row,
+        .defense-row-3 .pos-row {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            align-items: stretch;
+            width: 100%;
+        }
+        .offense-row-1 .pos-row .slot-wrap,
+        .offense-row-2 .pos-row .slot-wrap,
+        .offense-row-3 .pos-row .slot-wrap,
+        .defense-row-1 .pos-row .slot-wrap,
+        .defense-row-2 .pos-row .slot-wrap,
+        .defense-row-3 .pos-row .slot-wrap {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         .roster-section {
-            margin-top: 24px;
-            padding: 0 36px 32px 36px;
+            margin-top: 20px;
+            padding: 0 28px 24px 28px;
             page-break-inside: avoid;
         }
         .roster-section .roster-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 10px;
-            padding-top: 12px;
+            margin-bottom: 8px;
+            padding-top: 10px;
             border-top: 2px solid #e8ecf1;
             color: #1a2a3a;
         }
@@ -629,20 +649,20 @@
         .roster-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 10px;
+            font-size: 9px;
         }
         .roster-table thead {
             background: #1a2a3a;
             color: #fff;
         }
         .roster-table th {
-            padding: 6px 10px;
+            padding: 4px 8px;
             text-align: left;
             font-weight: 700;
             border: 1px solid #2d4055;
         }
         .roster-table td {
-            padding: 5px 10px;
+            padding: 3px 8px;
             border: 1px solid #dde2e8;
         }
         .roster-table tbody tr:nth-child(even) {
@@ -651,19 +671,19 @@
         .roster-table .team-divider td {
             background: #e8ecf1;
             font-weight: 700;
-            font-size: 11px;
-            padding: 6px 10px;
+            font-size: 10px;
+            padding: 4px 8px;
             border-color: #d0d7df;
         }
         .roster-empty {
             text-align: center;
             color: #bbb;
-            padding: 24px 0;
+            padding: 20px 0;
             font-style: italic;
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        /* ─── TOAST NOTIFICATIONS ─── */
+        /* ─── TOAST ─── */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -675,14 +695,14 @@
             pointer-events: none;
         }
         .toast {
-            padding: 14px 24px;
+            padding: 12px 20px;
             border-radius: 8px;
             color: #fff;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.5s forwards;
-            min-width: 280px;
+            min-width: 240px;
             pointer-events: auto;
         }
         .toast.success { background: #27ae60; }
@@ -716,8 +736,8 @@
             .chart-page {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr !important;
-                gap: 20px !important;
-                padding: 0.4in 0.3in !important;
+                gap: 16px !important;
+                padding: 0.3in 0.25in !important;
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
                 margin: 0 !important;
@@ -732,45 +752,66 @@
             }
             .toast-container { display: none !important; }
             .player-slot { 
-                min-height: 50px !important;
+                min-height: 44px !important;
                 padding: 2px !important;
+                flex: 1 1 55px !important;
+                max-width: 75px !important;
             }
-            .player-slot .jersey { font-size: 16px !important; min-width: 20px !important; }
-            .player-slot .pname { font-size: 8px !important; }
-            .player-slot .pinfo { font-size: 7px !important; }
-            .player-slot.backup-slot { min-height: 35px !important; }
-            .player-slot.backup-slot .jersey { font-size: 12px !important; min-width: 16px !important; }
-            .pos-row .pos-label { font-size: 7px !important; width: 14px !important; }
-            .roster-table { font-size: 8px !important; }
+            .player-slot .jersey { font-size: 15px !important; min-width: 18px !important; }
+            .player-slot .pname { font-size: 7px !important; }
+            .player-slot .pinfo { font-size: 6px !important; }
+            .player-slot.backup-slot { min-height: 30px !important; flex: 1 1 40px !important; max-width: 55px !important; }
+            .player-slot.backup-slot .jersey { font-size: 11px !important; min-width: 14px !important; }
+            .pos-row .pos-label { font-size: 6px !important; width: 12px !important; }
+            .roster-table { font-size: 7px !important; }
             .roster-table th, .roster-table td { padding: 2px 4px !important; }
-            .team-info { padding: 8px 10px !important; font-size: 10px !important; }
-            .team-info .team-name { font-size: 14px !important; }
-            .formation-header { font-size: 11px !important; padding: 4px 0 !important; }
+            .team-info { padding: 6px 8px !important; font-size: 9px !important; }
+            .team-info .team-name { font-size: 13px !important; }
+            .formation-header { font-size: 10px !important; padding: 3px 0 !important; }
             .offense-row-1, .offense-row-2, .offense-row-3, 
             .defense-row-1, .defense-row-2, .defense-row-3 {
-                gap: 3px !important;
+                gap: 2px !important;
             }
             .roster-section {
-                margin-top: 10px !important;
-                padding: 0 0.3in 0.2in 0.3in !important;
+                margin-top: 8px !important;
+                padding: 0 0.2in 0.15in 0.2in !important;
             }
             .roster-section .roster-title {
-                font-size: 11px !important;
-                padding-top: 6px !important;
+                font-size: 10px !important;
+                padding-top: 4px !important;
+            }
+            .offense-row-3 {
+                grid-template-columns: 1fr 1fr 1fr 1fr 1fr !important;
+            }
+            .defense-row-1 {
+                grid-template-columns: 1fr 1fr 1fr 1fr !important;
+            }
+            .defense-row-2 {
+                grid-template-columns: 1fr 1fr 1fr !important;
+                max-width: 260px !important;
+            }
+            .defense-row-3 {
+                grid-template-columns: 1fr 1fr !important;
+                max-width: 150px !important;
+            }
+            .offense-row-1 {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            .offense-row-2 {
+                grid-template-columns: 1fr 1fr 1fr !important;
             }
         }
 
-        /* ─── FORCE LANDSCAPE & LEGAL ─── */
         @page {
             size: 11in 14in landscape;
-            margin: 0.2in;
+            margin: 0.15in;
         }
     </style>
 </head>
 <body>
     <div class="toast-container" id="toastContainer"></div>
     <div class="container">
-        <!-- PRINT BUTTON (top) -->
+        <!-- PRINT BUTTON -->
         <div class="no-print" style="text-align:center; margin:0 0 16px 0;">
             <button onclick="window.print()" style="padding:16px 50px; background:#1a2a3a; color:#fff; border:none; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,0.15);">
                 🖨️ PRINT CHART (Landscape, Legal)
