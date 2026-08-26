@@ -592,7 +592,8 @@
             flex-shrink: 0;
         }
 
-        /* ─── OFFENSE ROWS (TOP-DOWN VIEW ─── */
+        /* ─── OFFENSE ROWS (TOP-DOWN VIEW) ─── */
+        /* Row 1: OL at TOP */
         .offense-row-1 {
             display: flex;
             gap: 3px;
@@ -601,15 +602,29 @@
             max-width: 420px;
             flex-wrap: wrap;
         }
+        /* Row 2: WR1, WR2 on ends + QB under center */
         .offense-row-2 {
             display: flex;
             gap: 3px;
             justify-content: center;
             width: 100%;
-            max-width: 320px;
+            max-width: 420px;
             flex-wrap: wrap;
         }
+        .offense-row-2 .pos-row {
+            max-width: 140px;
+        }
+        /* Row 3: TE */
         .offense-row-3 {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+            width: 100%;
+            max-width: 160px;
+            flex-wrap: wrap;
+        }
+        /* Row 4: RB, FB at BOTTOM */
+        .offense-row-4 {
             display: flex;
             gap: 3px;
             justify-content: center;
@@ -619,6 +634,7 @@
         }
 
         /* ─── DEFENSE ROWS (4-3) ─── */
+        /* Row 1: DL at TOP */
         .defense-row-1 {
             display: flex;
             gap: 3px;
@@ -627,6 +643,7 @@
             max-width: 380px;
             flex-wrap: wrap;
         }
+        /* Row 2: LBs */
         .defense-row-2 {
             display: flex;
             gap: 3px;
@@ -635,6 +652,7 @@
             max-width: 280px;
             flex-wrap: wrap;
         }
+        /* Row 3: CBs */
         .defense-row-3 {
             display: flex;
             gap: 3px;
@@ -643,6 +661,7 @@
             max-width: 180px;
             flex-wrap: wrap;
         }
+        /* Row 4: Safeties at BOTTOM */
         .defense-row-4 {
             display: flex;
             gap: 3px;
@@ -793,7 +812,7 @@
             .team-info { padding: 4px 6px !important; font-size: 7px !important; }
             .team-info .team-name { font-size: 10px !important; }
             .formation-header { font-size: 8px !important; padding: 2px 0 !important; }
-            .offense-row-1, .offense-row-2, .offense-row-3, 
+            .offense-row-1, .offense-row-2, .offense-row-3, .offense-row-4,
             .defense-row-1, .defense-row-2, .defense-row-3, .defense-row-4 {
                 gap: 2px !important;
             }
@@ -806,8 +825,9 @@
                 padding-top: 3px !important;
             }
             .offense-row-1 { max-width: 320px !important; }
-            .offense-row-2 { max-width: 240px !important; }
-            .offense-row-3 { max-width: 160px !important; }
+            .offense-row-2 { max-width: 320px !important; }
+            .offense-row-3 { max-width: 120px !important; }
+            .offense-row-4 { max-width: 160px !important; }
             .defense-row-1 { max-width: 280px !important; }
             .defense-row-2 { max-width: 200px !important; }
             .defense-row-3 { max-width: 140px !important; }
@@ -967,7 +987,11 @@
     </div>
 
     <script>
-        const OFFENSE_SLOTS = ['LT', 'LG', 'C', 'RG', 'RT', 'WR1', 'WR2', 'QB', 'RB', 'FB', 'TE'];
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // OFFENSE ORDER: TOP to BOTTOM (Field View)
+        // LT, LG, C, RG, RT (OL) → WR1, WR2, QB (under center) → RB, FB
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        const OFFENSE_SLOTS = ['LT', 'LG', 'C', 'RG', 'RT', 'WR1', 'WR2', 'QB', 'TE', 'RB', 'FB'];
         const DEFENSE_SLOTS = ['DE1', 'DE2', 'DT1', 'DT2', 'LB1', 'LB2', 'LB3', 'CB1', 'CB2', 'S1', 'S2'];
 
         const POS_MAP = {
@@ -1319,23 +1343,30 @@
             let html = '<div class="formation-grid">';
 
             if (isOffense) {
-                // Row 1: LT, LG, C, RG, RT (Offensive Line - TOP)
+                // Row 1: LT, LG, C, RG, RT (Offensive Line - TOP, closest to LOS)
                 html += `<div class="offense-row-1">`;
                 ['LT', 'LG', 'C', 'RG', 'RT'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
 
-                // Row 2: WR1, WR2, TE (Receivers)
+                // Row 2: WR1, WR2 (Receivers on the ends), QB (under center in the middle)
                 html += `<div class="offense-row-2">`;
-                ['WR1', 'WR2', 'TE'].forEach(slot => {
+                ['WR1', 'WR2', 'QB'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
 
-                // Row 3: QB, RB, FB (Backfield - BOTTOM)
+                // Row 3: TE (slightly deeper)
                 html += `<div class="offense-row-3">`;
-                ['QB', 'RB', 'FB'].forEach(slot => {
+                ['TE'].forEach(slot => {
+                    html += renderSlot(team, slot, isOffense);
+                });
+                html += `</div>`;
+
+                // Row 4: RB, FB (deepest in the backfield - BOTTOM)
+                html += `<div class="offense-row-4">`;
+                ['RB', 'FB'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
                 });
                 html += `</div>`;
