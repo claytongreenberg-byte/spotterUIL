@@ -1055,9 +1055,7 @@
             }
         };
 
-        let idCounter = 1000;
-
-        function genId() { return ++idCounter; }         let idCounter = 1000;
+              let idCounter = 1000;
 
         function genId() { return ++idCounter; }
 
@@ -1075,7 +1073,6 @@
                 if (toast.parentNode) toast.remove();
             }, 3000);
         }
-
         function initState() {
             ['teamA', 'teamB'].forEach(tk => {
                 const t = state[tk];
