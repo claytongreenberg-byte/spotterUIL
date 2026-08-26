@@ -17,11 +17,9 @@
             color: #1a1a1a;
         }
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
-
-        /* ─── EDITOR PANEL ─── */
         .editor-panel {
             background: #fff;
             padding: 24px;
@@ -390,37 +388,45 @@
         .chart-page {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 20px 24px;
+            gap: 16px;
+            padding: 16px 20px;
             page-break-after: always;
             page-break-inside: avoid;
         }
         .chart-page:last-child {
             page-break-after: auto;
         }
-        @media (max-width: 800px) {
+        @media (max-width: 1000px) {
             .chart-page {
                 grid-template-columns: 1fr;
+                gap: 24px;
+                padding: 20px;
+            }
+        }
+        @media (max-width: 600px) {
+            .chart-page {
+                padding: 12px;
                 gap: 16px;
-                padding: 16px;
             }
         }
         .team-section {
             display: flex;
             flex-direction: column;
+            min-width: 0;
         }
 
         /* ─── TEAM INFO ─── */
         .team-info {
-            padding: 10px 12px;
+            padding: 8px 12px;
             border-radius: 6px;
             color: #fff;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-size: 10px;
             line-height: 1.4;
+            flex-shrink: 0;
         }
         .team-info .team-name {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             letter-spacing: 0.3px;
             margin-bottom: 2px;
@@ -446,21 +452,22 @@
 
         /* ─── FORMATION HEADER ─── */
         .formation-header {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             text-align: center;
             padding: 4px 0;
             border-radius: 4px;
             color: #fff;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
 
         /* ─── FORMATION GRID ─── */
         .formation-grid {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
             align-items: center;
             width: 100%;
         }
@@ -468,23 +475,25 @@
         /* ─── POSITION ROW ─── */
         .pos-row {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             justify-content: center;
             align-items: stretch;
             width: 100%;
+            flex-wrap: wrap;
         }
         .pos-row .slot-wrap {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             flex: 1;
             justify-content: center;
             flex-wrap: wrap;
+            min-width: 0;
         }
 
         /* ─── PLAYER SLOT ─── */
         .player-slot {
-            width: 80px;
-            min-height: 54px;
+            width: 70px;
+            min-height: 48px;
             border: 2px solid #e0e4ea;
             border-radius: 4px;
             padding: 2px 3px;
@@ -494,26 +503,27 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex: 1 1 60px;
-            max-width: 90px;
+            flex: 1 1 55px;
+            max-width: 85px;
+            min-width: 45px;
         }
         .player-slot.filled {
             border-color: #c8ced6;
             background: #fff;
         }
         .player-slot .jersey {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 800;
             color: #fff;
-            padding: 0 4px;
+            padding: 0 3px;
             border-radius: 3px;
             line-height: 1.2;
-            min-width: 22px;
+            min-width: 20px;
             text-align: center;
             width: 100%;
         }
         .player-slot .pname {
-            font-size: 8px;
+            font-size: 7px;
             font-weight: 600;
             line-height: 1.1;
             margin-top: 1px;
@@ -521,7 +531,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
-            padding: 0 2px;
+            padding: 0 1px;
         }
         .player-slot .pinfo {
             font-size: 6px;
@@ -531,7 +541,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
-            padding: 0 2px;
+            padding: 0 1px;
         }
         .player-slot .pbackup {
             font-size: 5px;
@@ -548,13 +558,14 @@
             border-style: dashed;
             border-color: #d5dbe3;
             background: #f8f9fc;
-            min-height: 34px;
-            max-width: 60px;
-            flex: 1 1 45px;
+            min-height: 30px;
+            max-width: 55px;
+            flex: 1 1 40px;
+            min-width: 35px;
         }
         .player-slot.backup-slot .jersey {
-            font-size: 12px;
-            min-width: 16px;
+            font-size: 11px;
+            min-width: 14px;
         }
         .player-slot.backup-slot .pname {
             font-size: 6px;
@@ -563,85 +574,92 @@
             font-size: 5px;
         }
 
-        /* ─── POSITION LABEL ─── */
+        /* ─── OFFSET POSITION LABEL ─── */
         .pos-label {
-            font-size: 7px;
+            font-size: 6px;
             font-weight: 700;
             color: #666;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             background: #f5f7fa;
             border-radius: 3px;
-            padding: 0 4px;
+            padding: 0 3px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 16px;
+            min-width: 14px;
             writing-mode: vertical-lr;
             flex-shrink: 0;
         }
 
-        /* ─── OFFENSE ROWS (Top-Down View: OL at top, WR deeper, QB/RB deepest) ─── */
+        /* ─── OFFENSE ROWS (TOP-DOWN VIEW ─── */
         .offense-row-1 {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             justify-content: center;
             width: 100%;
-            max-width: 460px;
+            max-width: 420px;
+            flex-wrap: wrap;
         }
         .offense-row-2 {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             justify-content: center;
             width: 100%;
-            max-width: 400px;
+            max-width: 320px;
+            flex-wrap: wrap;
         }
         .offense-row-3 {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             justify-content: center;
             width: 100%;
-            max-width: 340px;
+            max-width: 220px;
+            flex-wrap: wrap;
         }
 
-        /* ─── DEFENSE ROWS (Top-Down View: DL at top, LB deeper, DB deepest) ─── */
+        /* ─── DEFENSE ROWS (4-3) ─── */
         .defense-row-1 {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             justify-content: center;
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;
+            flex-wrap: wrap;
         }
         .defense-row-2 {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             justify-content: center;
             width: 100%;
-            max-width: 300px;
+            max-width: 280px;
+            flex-wrap: wrap;
         }
         .defense-row-3 {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             justify-content: center;
             width: 100%;
-            max-width: 200px;
+            max-width: 180px;
+            flex-wrap: wrap;
         }
         .defense-row-4 {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             justify-content: center;
             width: 100%;
-            max-width: 200px;
+            max-width: 180px;
+            flex-wrap: wrap;
         }
 
         /* ─── ROSTER TABLE ─── */
         .roster-section {
-            margin-top: 16px;
-            padding: 0 24px 20px 24px;
+            margin-top: 12px;
+            padding: 0 16px 16px 16px;
             page-break-inside: avoid;
         }
         .roster-section .roster-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             text-align: center;
             margin-bottom: 6px;
@@ -743,7 +761,7 @@
                 display: grid !important;
                 grid-template-columns: 1fr 1fr !important;
                 gap: 12px !important;
-                padding: 0.2in 0.2in !important;
+                padding: 0.15in 0.15in !important;
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
                 margin: 0 !important;
@@ -758,46 +776,47 @@
             }
             .toast-container { display: none !important; }
             .player-slot { 
-                min-height: 38px !important;
+                min-height: 32px !important;
                 padding: 1px 2px !important;
-                flex: 1 1 45px !important;
-                max-width: 65px !important;
+                flex: 1 1 38px !important;
+                max-width: 55px !important;
+                min-width: 30px !important;
             }
-            .player-slot .jersey { font-size: 13px !important; min-width: 16px !important; }
+            .player-slot .jersey { font-size: 12px !important; min-width: 14px !important; }
             .player-slot .pname { font-size: 6px !important; }
             .player-slot .pinfo { font-size: 5px !important; }
-            .player-slot.backup-slot { min-height: 26px !important; flex: 1 1 32px !important; max-width: 45px !important; }
-            .player-slot.backup-slot .jersey { font-size: 10px !important; min-width: 12px !important; }
+            .player-slot.backup-slot { min-height: 22px !important; flex: 1 1 28px !important; max-width: 40px !important; min-width: 22px !important; }
+            .player-slot.backup-slot .jersey { font-size: 9px !important; min-width: 10px !important; }
             .pos-label { font-size: 5px !important; min-width: 10px !important; }
             .roster-table { font-size: 6px !important; }
             .roster-table th, .roster-table td { padding: 1px 3px !important; }
-            .team-info { padding: 4px 6px !important; font-size: 8px !important; }
-            .team-info .team-name { font-size: 11px !important; }
-            .formation-header { font-size: 9px !important; padding: 2px 0 !important; }
+            .team-info { padding: 4px 6px !important; font-size: 7px !important; }
+            .team-info .team-name { font-size: 10px !important; }
+            .formation-header { font-size: 8px !important; padding: 2px 0 !important; }
             .offense-row-1, .offense-row-2, .offense-row-3, 
             .defense-row-1, .defense-row-2, .defense-row-3, .defense-row-4 {
                 gap: 2px !important;
             }
             .roster-section {
-                margin-top: 6px !important;
-                padding: 0 0.15in 0.1in 0.15in !important;
+                margin-top: 4px !important;
+                padding: 0 0.1in 0.08in 0.1in !important;
             }
             .roster-section .roster-title {
-                font-size: 9px !important;
+                font-size: 8px !important;
                 padding-top: 3px !important;
             }
-            .offense-row-1 { max-width: 360px !important; }
-            .offense-row-2 { max-width: 300px !important; }
-            .offense-row-3 { max-width: 260px !important; }
-            .defense-row-1 { max-width: 300px !important; }
-            .defense-row-2 { max-width: 220px !important; }
-            .defense-row-3 { max-width: 150px !important; }
-            .defense-row-4 { max-width: 150px !important; }
+            .offense-row-1 { max-width: 320px !important; }
+            .offense-row-2 { max-width: 240px !important; }
+            .offense-row-3 { max-width: 160px !important; }
+            .defense-row-1 { max-width: 280px !important; }
+            .defense-row-2 { max-width: 200px !important; }
+            .defense-row-3 { max-width: 140px !important; }
+            .defense-row-4 { max-width: 140px !important; }
         }
 
         @page {
             size: 11in 14in landscape;
-            margin: 0.1in;
+            margin: 0.08in;
         }
     </style>
 </head>
@@ -1321,7 +1340,7 @@
                 });
                 html += `</div>`;
             } else {
-                // Defense - 4-3 (Top-Down: DL at top, DB deepest)
+                // Defense - 4-3 (TOP to BOTTOM)
                 // Row 1: DE1, DT1, DT2, DE2 (Defensive Line - TOP)
                 html += `<div class="defense-row-1">`;
                 ['DE1', 'DT1', 'DT2', 'DE2'].forEach(slot => {
@@ -1343,7 +1362,7 @@
                 });
                 html += `</div>`;
 
-                // Row 4: S1, S2 (Safeties - BOTTOM/deepest)
+                // Row 4: S1, S2 (Safeties - BOTTOM)
                 html += `<div class="defense-row-4">`;
                 ['S1', 'S2'].forEach(slot => {
                     html += renderSlot(team, slot, isOffense);
